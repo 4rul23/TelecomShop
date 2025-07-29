@@ -59,7 +59,7 @@ export default function OrderSuccessContent() {
     const orderDate = new Date(orderData?.date);
     const deliveryDate = new Date(orderDate);
     deliveryDate.setDate(orderDate.getDate() + 3); // 3 days delivery
-    
+
     return deliveryDate.toLocaleString('id-ID', {
       weekday: 'long',
       year: 'numeric',
@@ -248,7 +248,7 @@ export default function OrderSuccessContent() {
             <Download className="w-5 h-5" />
             <span>Download Invoice</span>
           </button>
-          
+
           <Link
             href="/orders"
             className="flex items-center justify-center space-x-2 bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 transition-colors"
@@ -256,7 +256,7 @@ export default function OrderSuccessContent() {
             <Package className="w-5 h-5" />
             <span>Lihat Semua Pesanan</span>
           </Link>
-          
+
           <Link
             href="/produk"
             className="flex items-center justify-center space-x-2 bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900 transition-colors"

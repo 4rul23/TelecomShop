@@ -20,7 +20,6 @@ import { useToastContext } from '../../../../components/ToastProvider';
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
   const [isLoading, setIsLoading] = useState(true);
@@ -187,10 +186,10 @@ export default function ProductDetailPage() {
       <div className="max-w-7xl mx-auto px-4 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mb-16">
           <div className="order-1 lg:order-1">
-            <div className="sticky top-24 space-y-4">
+            <div className="sticky top-24">
               <div className="relative bg-gray-50 rounded-xl overflow-hidden shadow-sm border border-gray-200">
                 <Image
-                  src={product.images[selectedImage]}
+                  src={product.image}
                   alt={product.name}
                   width={600}
                   height={600}
@@ -209,27 +208,6 @@ export default function ProductDetailPage() {
                 >
                   <Heart className={`h-5 w-5 ${product && isInWishlist(product.id) ? 'fill-current' : ''}`} />
                 </button>
-              </div>
-              <div className="flex space-x-3 overflow-x-auto pb-2">
-                {product.images.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setSelectedImage(index)}
-                    className={`flex-shrink-0 w-20 h-20 rounded-lg border-2 overflow-hidden transition-all duration-200 ${
-                      selectedImage === index
-                        ? 'border-red-600 shadow-md scale-105'
-                        : 'border-gray-200 hover:border-gray-400 hover:scale-102'
-                    }`}
-                  >
-                    <Image
-                      src={image}
-                      alt={`${product.name} ${index + 1}`}
-                      width={80}
-                      height={80}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
               </div>
             </div>
           </div>
