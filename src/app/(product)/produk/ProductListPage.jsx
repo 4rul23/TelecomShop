@@ -1,42 +1,54 @@
-import { Suspense } from 'react';
-import ProductListPage from './ProductListPage';
+'use client';
 
-export default function ProductsPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ProductListPage />
-    </Suspense>
-  );
-}
+import { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation';
+// ...existing code...
+import HeroBanner from './components/HeroBanner';
+import FilterSidebar from './components/FilterSidebar';
+import MobileFilterModal from './components/MobileFilterModal';
+import ProductControls from './components/ProductControls';
+import ProductGrid from './components/ProductGrid';
+import Pagination from './components/Pagination';
+import { getAllProducts, searchProducts, CATEGORIES as DB_CATEGORIES, PRICE_RANGES } from '../../../data/products';
 
-  // Initialize products from database
+const PRODUCTS_PER_PAGE = 8;
+
+export default function ProductListPage() {
+  // State
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [priceRange, setPriceRange] = useState([0, 10000000]);
+  const [customPriceRange, setCustomPriceRange] = useState([0, 10000000]);
+  const [selectedPriceRange, setSelectedPriceRange] = useState("Semua");
+  const [stockFilter, setStockFilter] = useState("all");
+  const [sortBy, setSortBy] = useState('name');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [viewMode, setViewMode] = useState('grid');
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Get search params from URL
+  const searchParams = useSearchParams();
+
+  // Load all products and categories on mount
   useEffect(() => {
-    setIsLoading(true);
-    try {
-      const dbProducts = getAllProducts();
-      const categories = [...new Set(dbProducts.map(product => product.category))];
-
-      setAllProducts(dbProducts);
-      setProducts(dbProducts);
-      setCategories(categories);
-      setIsLoaded(true);
-    } catch (error) {
-      console.error('Error loading products:', error);
-    } finally {
-      setIsLoading(false);
-    }
+    const all = getAllProducts();
+    setAllProducts(all);
+    setCategories(DB_CATEGORIES);
+    setIsLoaded(true);
   }, []);
 
-  // Handle search from URL params
+  // Update searchTerm from URL
   useEffect(() => {
-    const urlSearch = searchParams.get('search');
-    if (urlSearch) {
-      setSearchTerm(urlSearch);
-      setCurrentPage(1);
-    }
+    const q = searchParams.get('search') || '';
+    setSearchTerm(q);
   }, [searchParams]);
 
-  // Filtered and sorted products
+  // Filtered products
   const filteredProducts = useMemo(() => {
     let result = [...allProducts];
 
