@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Package, Calendar, MapPin, Phone, Mail, ArrowLeft, Eye } from 'lucide-react';
+import ProtectedPage from '../../components/ProtectedPage';
 
-export default function OrdersPage() {
+function OrdersPage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
@@ -295,3 +296,13 @@ export default function OrdersPage() {
     </div>
   );
 }
+
+function OrdersPageWrapper() {
+  return (
+    <ProtectedPage message="melihat riwayat pesanan">
+      <OrdersPage />
+    </ProtectedPage>
+  );
+}
+
+export default OrdersPageWrapper;

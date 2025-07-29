@@ -5,93 +5,27 @@ import { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { Search, Menu, X, ShoppingCart, User, LogOut, Package, Shield } from 'lucide-react';
 import { useCart } from '../hooks/useDatabase';
+import { useAuth } from '../hooks/useAuth';
+import { useToastContext } from './ToastProvider';
 
 function NavigationBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [authKey, setAuthKey] = useState(0); // Force re-render key
   const userMenuRef = useRef(null);
   const pathname = usePathname();
   const router = useRouter();
   const { getItemCount, isClient } = useCart();
+  const { isLoggedIn, user, logout } = useAuth();
+  const { showLoginRequired } = useToastContext();
 
-  // Check authentication status on component mount and listen for changes
-  useEffect(() => {
-    checkAuth();
-
-    // Listen for storage changes (for login/logout from other tabs)
-    const handleStorageChange = (e) => {
-      if (e.key === 'user' || e.key === 'authToken') {
-        checkAuth();
-      }
-    };
-
-    // Listen for custom auth events
-    const handleAuthChange = () => {
-      checkAuth();
-    };
-
-    // Poll authentication status every 200ms to catch immediate changes
-    const authInterval = setInterval(checkAuth, 200);
-
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('authChange', handleAuthChange);
-
-    // Cleanup
-    return () => {
-      clearInterval(authInterval);
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('authChange', handleAuthChange);
-    };
-  }, []);
-
-  // Debug effect to log authentication state changes
-  useEffect(() => {
-    console.log('Auth state changed:', { isLoggedIn, user: user?.name });
-  }, [isLoggedIn, user]);
-
-  const checkAuth = () => {
-    try {
-      const savedUser = localStorage.getItem('user');
-      const authToken = localStorage.getItem('authToken');
-
-      if (savedUser && authToken) {
-        const parsedUser = JSON.parse(savedUser);
-        setUser(parsedUser);
-        setIsLoggedIn(true);
-        setAuthKey(Date.now()); // Force re-render
-        console.log('User authenticated:', parsedUser.name);
-      } else {
-        setUser(null);
-        setIsLoggedIn(false);
-        setAuthKey(Date.now()); // Force re-render
-        console.log('User not authenticated');
-      }
-    } catch (error) {
-      console.error('Error parsing user data:', error);
-      localStorage.removeItem('user');
-      localStorage.removeItem('authToken');
-      setUser(null);
-      setIsLoggedIn(false);
-      setAuthKey(Date.now()); // Force re-render
+  // Handle cart access with auth protection
+  const handleCartClick = () => {
+    if (!isLoggedIn) {
+      showLoginRequired('mengakses keranjang belanja');
+      return;
     }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('authToken');
-    setUser(null);
-    setIsLoggedIn(false);
-    setIsUserMenuOpen(false);
-
-    // Trigger auth change event
-    window.dispatchEvent(new Event('authChange'));
-
-    // Redirect to home
-    router.push('/');
+    router.push('/cart');
   };
 
   // Check if user is admin
@@ -145,7 +79,7 @@ function NavigationBar() {
   };
 
   return (
-    <nav key={authKey} className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-b border-gray-200/50 shadow-lg">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-b border-gray-200/50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo dengan design typography hitam & merah */}
@@ -228,6 +162,16 @@ function NavigationBar() {
               </Link>
             )}
 
+            {/* Shopping Cart for non-logged users - redirect to login */}
+            {!isLoggedIn && (
+              <button
+                onClick={handleCartClick}
+                className="relative p-2 text-gray-900 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200"
+              >
+                <ShoppingCart className="h-6 w-6" />
+              </button>
+            )}
+
             {/* User Authentication */}
             {isLoggedIn ? (
               <div className="relative" ref={userMenuRef}>
@@ -276,7 +220,7 @@ function NavigationBar() {
                     )}
                     <hr className="my-1 border-gray-100" />
                     <button
-                      onClick={handleLogout}
+                      onClick={logout}
                       className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-all duration-200"
                     >
                       <LogOut className="h-4 w-4 mr-3" />
@@ -376,6 +320,20 @@ function NavigationBar() {
                   </span>
                 )}
               </Link>
+            )}
+
+            {/* Mobile Shopping Cart for non-logged users */}
+            {!isLoggedIn && (
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  handleCartClick();
+                }}
+                className="flex items-center px-4 py-3 text-gray-900 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 w-full text-left"
+              >
+                <ShoppingCart className="h-5 w-5 mr-3" />
+                Keranjang
+              </button>
             )}
 
             {/* Mobile User Menu */}

@@ -18,9 +18,10 @@ import {
   Truck,
   Clock
 } from 'lucide-react';
+import ProtectedPage from '../../components/ProtectedPage';
 import { useCart } from '../../hooks/useDatabase';
 
-export default function CheckoutPage() {
+function CheckoutPage() {
   const router = useRouter();
   const { cart, getTotal, getItemCount, clearCart, isClient } = useCart();
 
@@ -618,3 +619,13 @@ export default function CheckoutPage() {
     </div>
   );
 }
+
+function CheckoutPageWrapper() {
+  return (
+    <ProtectedPage message="melakukan checkout">
+      <CheckoutPage />
+    </ProtectedPage>
+  );
+}
+
+export default CheckoutPageWrapper;

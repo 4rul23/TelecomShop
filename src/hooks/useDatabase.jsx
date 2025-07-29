@@ -58,6 +58,28 @@ export const useCart = () => {
   const addToCart = (product, quantity = 1) => {
     if (!isClient) return;
 
+    // Check if user is logged in before adding to cart
+    const userData = localStorage.getItem('user');
+    const authToken = localStorage.getItem('authToken');
+
+    if (!userData || !authToken) {
+      // Use global toast function if available
+      if (typeof window !== 'undefined' && window.showAuthToast) {
+        window.showAuthToast('menambahkan produk ke keranjang');
+      } else {
+        // Fallback
+        const shouldRedirect = confirm(
+          `🛒 Anda harus login untuk menambahkan produk ke keranjang\n\nKlik OK untuk pergi ke halaman login, atau Cancel untuk tetap di halaman ini.`
+        );
+        if (shouldRedirect) {
+          const currentUrl = window.location.pathname + window.location.search;
+          localStorage.setItem('redirectAfterLogin', currentUrl);
+          window.location.href = '/login';
+        }
+      }
+      return false;
+    }
+
     const existingItem = cart.find(item => item.id === product.id);
     let newCart;
 
@@ -74,9 +96,7 @@ export const useCart = () => {
     setCart(newCart);
     safeLocalStorageSet('indri_cart', newCart);
     return newCart;
-  };
-
-  const removeFromCart = (productId) => {
+  };  const removeFromCart = (productId) => {
     if (!isClient) return;
 
     const newCart = cart.filter(item => item.id !== productId);

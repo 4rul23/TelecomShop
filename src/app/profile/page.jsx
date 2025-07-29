@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { User, Mail, Phone, MapPin, Calendar, Edit3, Save, X, ArrowLeft, Settings, Shield, Bell, Eye, Lock } from 'lucide-react';
+import ProtectedPage from '../../components/ProtectedPage';
 
-export default function ProfilePage() {
+function ProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -450,3 +451,13 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+function ProfilePageWrapper() {
+  return (
+    <ProtectedPage message="mengakses profil">
+      <ProfilePage />
+    </ProtectedPage>
+  );
+}
+
+export default ProfilePageWrapper;

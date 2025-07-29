@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { getProductById, getProductBySlug } from '../../../../data/products';
 import { useCart, useWishlist } from '../../../../hooks/useDatabase';
+import { useToastContext } from '../../../../components/ToastProvider';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -29,6 +30,7 @@ export default function ProductDetailPage() {
   // Database hooks
   const { addToCart, getItemCount, isClient } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { showToast } = useToastContext();
 
   // Load product data
   useEffect(() => {
@@ -90,24 +92,34 @@ export default function ProductDetailPage() {
       });
 
       try {
-        const updatedCart = addToCart(product, quantity);
+        const result = addToCart(product, quantity);
 
-        console.log('After adding to cart:', {
-          product: product.name,
-          quantity: quantity,
-          updatedCart: updatedCart,
-          newCartCount: getItemCount()
-        });
+        // Only show success toast if addToCart actually succeeded
+        if (result !== false) {
+          console.log('After adding to cart:', {
+            product: product.name,
+            quantity: quantity,
+            updatedCart: result,
+            newCartCount: getItemCount()
+          });
 
-        // Reset quantity to 1 after adding
-        setQuantity(1);
+          // Show success toast notification
+          showToast(
+            `${product.name} berhasil ditambahkan ke keranjang!`,
+            'success',
+            'Lihat Keranjang',
+            () => router.push('/cart')
+          );
 
-        // Redirect to cart page smoothly without any popup
-        router.push('/cart');
+          // Reset quantity to 1 after adding
+          setQuantity(1);
+        }
+        // If result is false, it means auth failed and useDatabase already showed auth toast
 
       } catch (error) {
         console.error('Error adding to cart:', error);
-        // Even for errors, just log to console without popup
+        // Show error toast only for actual errors, not auth failures
+        showToast('Gagal menambahkan produk ke keranjang', 'error');
       } finally {
         setIsAddingToCart(false);
       }
@@ -122,7 +134,15 @@ export default function ProductDetailPage() {
 
   const handleWishlistToggle = () => {
     if (product && isClient) {
+      const wasInWishlist = isInWishlist(product.id);
       toggleWishlist(product);
+
+      // Show appropriate toast message
+      if (wasInWishlist) {
+        showToast(`${product.name} dihapus dari wishlist`, 'info');
+      } else {
+        showToast(`${product.name} ditambahkan ke wishlist!`, 'success');
+      }
     }
   };
 

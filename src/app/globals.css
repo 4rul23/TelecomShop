@@ -41,3 +41,36 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Toast animations */
+@keyframes progress-bar {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.animate-progress-bar {
+  animation: progress-bar 5s linear forwards;
+}
+
+@keyframes slide-in-from-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-in {
+  animation-fill-mode: both;
+}
+
+.slide-in-from-right-5 {
+  animation: slide-in-from-right 0.3s ease-out;
+}
