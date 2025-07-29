@@ -95,7 +95,7 @@ export default function ProductDetailPage() {
         const result = addToCart(product, quantity);
 
         // Only show success toast if addToCart actually succeeded
-        if (result !== false) {
+        if (result !== false) { 
           console.log('After adding to cart:', {
             product: product.name,
             quantity: quantity,

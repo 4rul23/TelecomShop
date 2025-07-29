@@ -38,7 +38,8 @@ export default function ProductListPage() {
   useEffect(() => {
     const all = getAllProducts();
     setAllProducts(all);
-    setCategories(DB_CATEGORIES);
+    // Use category labels as strings to ensure unique keys
+    setCategories(DB_CATEGORIES.map(cat => cat.label));
     setIsLoaded(true);
   }, []);
 
