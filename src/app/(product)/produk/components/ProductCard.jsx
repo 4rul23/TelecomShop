@@ -25,6 +25,9 @@ export default function ProductCard({ product, index }) {
             alt={product.name}
             className={`w-full h-full object-cover transition-all duration-700 ease-out
               ${isHovered ? 'scale-110' : 'scale-100'}`}
+            onError={(e) => {
+              e.target.src = "/tel.png";
+            }}
           />
 
           <div className={`absolute inset-0 bg-gradient-to-t from-black/30 via-black/5 to-transparent

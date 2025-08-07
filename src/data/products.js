@@ -446,7 +446,7 @@ export const PRODUCTS_DB = [
 // Categories for filtering
 export const CATEGORIES = [
   "Konektor",
-  "Kabel", 
+  "Kabel",
   "Networking",
   "Wireless",
   "Fiber Optic",
@@ -480,24 +480,24 @@ export const searchProducts = (query, options = {}) => {
   } = options;
 
   const searchTerm = query.toLowerCase().trim();
-  
+
   let filtered = PRODUCTS_DB.filter(product => {
     // Text search
-    const matchesSearch = 
+    const matchesSearch =
       product.name.toLowerCase().includes(searchTerm) ||
       product.description.toLowerCase().includes(searchTerm) ||
       product.category.toLowerCase().includes(searchTerm) ||
       product.brand.toLowerCase().includes(searchTerm) ||
-      (product.specifications && Object.values(product.specifications).some(spec => 
+      (product.specifications && Object.values(product.specifications).some(spec =>
         spec.toLowerCase().includes(searchTerm)
       ));
 
     // Category filter
     const matchesCategory = categories.length === 0 || categories.includes(product.category);
-    
+
     // Price filter
     const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
-    
+
     // Stock filter
     const matchesStock = inStock === null || (inStock ? product.stock > 0 : product.stock === 0);
 
@@ -540,11 +540,11 @@ export const getProductsByCategory = (category) => {
 export const getRelatedProducts = (productId, limit = 4) => {
   const product = getProductById(productId);
   if (!product) return [];
-  
-  const related = PRODUCTS_DB.filter(p => 
-    p.id !== productId && 
+
+  const related = PRODUCTS_DB.filter(p =>
+    p.id !== productId &&
     (p.category === product.category || p.brand === product.brand)
   );
-  
+
   return related.slice(0, limit);
 };

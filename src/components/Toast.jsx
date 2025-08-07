@@ -8,7 +8,7 @@ const Toast = ({ message, type = 'info', isVisible, onClose, actionText, onActio
     if (isVisible) {
       const timer = setTimeout(() => {
         onClose();
-      }, 5000); // Auto close after 5 seconds
+      }, 5000);
 
       return () => clearTimeout(timer);
     }
@@ -99,7 +99,7 @@ const Toast = ({ message, type = 'info', isVisible, onClose, actionText, onActio
           </button>
         </div>
 
-        {/* Progress bar */}
+
         <div className="absolute bottom-0 left-0 h-1 bg-gray-100 rounded-b-xl overflow-hidden w-full">
           <div className={`h-full ${getProgressBarColor()} animate-progress-bar`}></div>
         </div>
@@ -108,12 +108,12 @@ const Toast = ({ message, type = 'info', isVisible, onClose, actionText, onActio
   );
 };
 
-// Hook untuk mengelola toast notifications
+
 export const useToast = () => {
   const [toasts, setToasts] = useState([]);
 
   const showToast = (message, type = 'info', actionText = null, onAction = null) => {
-    const id = Date.now() + Math.random(); // Add random component to prevent duplicates
+    const id = Date.now() + Math.random();
     const newToast = {
       id,
       message,

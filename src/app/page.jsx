@@ -4,10 +4,10 @@ import Link from 'next/link';
 export default function Home() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
+
       <section className="relative overflow-hidden">
 
-        {/* Enhanced Background Pattern */}
+
         <div className="absolute inset-0 opacity-[0.02]">
           <svg className="w-full h-full" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -24,10 +24,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-20 items-center">
 
-            {/* Text Content - Proportional Size */}
+
             <div className="space-y-8 lg:space-y-10">
 
-              {/* Heading - Proportional Typography */}
+
               <div className="space-y-6">
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 leading-[0.9]">
                   <span className="block">Peralatan</span>
@@ -42,7 +42,7 @@ export default function Home() {
                   </span>
                 </h1>
 
-                {/* Description - Proportional */}
+
                 <div className="space-y-4 max-w-2xl">
                   <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 leading-relaxed font-medium">
                     Lengkapi <span className="relative inline-block">
@@ -57,7 +57,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* CTA Buttons - Proportional */}
+
               <div className="flex flex-col sm:flex-row gap-4 pt-6">
                 <Link
                   href="/produk"
@@ -86,19 +86,19 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Image Section - Proportional */}
+
             <div className="relative lg:pl-8">
 
-              {/* Main Container - Proportional */}
+
               <div className="relative bg-gradient-to-br from-white via-red-50/40 to-red-100/50 rounded-3xl p-8 lg:p-12 shadow-xl border border-red-100/60 backdrop-blur-sm">
 
-                {/* Proportional Corner Decorations */}
+
                 <div className="absolute top-6 left-6 w-8 h-8 border-l-3 border-t-3 border-red-300 rounded-tl-xl opacity-70"></div>
                 <div className="absolute top-6 right-6 w-8 h-8 border-r-3 border-t-3 border-red-300 rounded-tr-xl opacity-70"></div>
                 <div className="absolute bottom-6 left-6 w-8 h-8 border-l-3 border-b-3 border-red-300 rounded-bl-xl opacity-70"></div>
                 <div className="absolute bottom-6 right-6 w-8 h-8 border-r-3 border-b-3 border-red-300 rounded-br-xl opacity-70"></div>
 
-                {/* Proportional Connection Patterns */}
+
                 <div className="absolute top-8 left-8 opacity-15">
                   <svg width="80" height="80" viewBox="0 0 80 80">
                     <g fill="#dc2626">
@@ -139,7 +139,7 @@ export default function Home() {
                   </svg>
                 </div>
 
-                {/* Image Container - Proportional */}
+
                 <div className="flex items-center justify-center relative py-8">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-64 h-64 lg:w-80 lg:h-80 rounded-full bg-gradient-to-br from-red-100/60 to-red-200/40 opacity-50 animate-pulse"></div>
@@ -155,18 +155,18 @@ export default function Home() {
                   />
                 </div>
 
-                {/* Proportional Floating Tech Elements */}
+
                 <div className="absolute top-4 left-4 w-3 h-3 bg-red-500 rounded-full opacity-60 animate-bounce shadow-sm"></div>
                 <div className="absolute bottom-4 right-4 w-2.5 h-2.5 bg-red-400 rounded-full opacity-50 animate-bounce shadow-sm" style={{animationDelay: '0.5s'}}></div>
                 <div className="absolute top-1/3 right-8 w-1.5 h-1.5 bg-red-600 rounded-full opacity-70 animate-pulse"></div>
                 <div className="absolute bottom-1/3 left-8 w-1.5 h-1.5 bg-red-300 rounded-full opacity-60 animate-pulse" style={{animationDelay: '1s'}}></div>
               </div>
 
-              {/* Proportional Background Elements */}
+
               <div className="absolute -top-6 -right-6 w-16 h-16 bg-gradient-to-br from-red-200 to-red-300 rounded-full opacity-60 blur-sm animate-pulse"></div>
               <div className="absolute -bottom-6 -left-6 w-12 h-12 bg-gradient-to-br from-red-300 to-red-400 rounded-full opacity-50 blur-sm animate-pulse" style={{animationDelay: '1s'}}></div>
 
-              {/* Proportional Decorative Lines */}
+
               <div className="absolute top-1/4 -left-4 w-2 h-16 bg-gradient-to-b from-red-400 to-transparent opacity-25 rounded-full transform rotate-12"></div>
               <div className="absolute bottom-1/4 -right-4 w-1.5 h-12 bg-gradient-to-t from-red-500 to-transparent opacity-20 rounded-full transform -rotate-12"></div>
             </div>

@@ -229,7 +229,7 @@ export default function ProductForm({ product, onSave, onCancel }) {
             </label>
 
             {/* Image Preview */}
-            {imagePreview && (
+            {imagePreview && imagePreview.trim() !== '' && (
               <div className="mb-4 relative inline-block">
                 <img
                   src={imagePreview}

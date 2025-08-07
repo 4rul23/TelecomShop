@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '../../contexts/AuthContext';
 import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -21,7 +23,7 @@ export default function LoginPage() {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
+
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -59,10 +61,10 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // Simulate API call delay
+
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Check for admin login first
+
       if (formData.email === 'admin@telecomshop.com' && formData.password === 'admin123') {
         const adminData = {
           id: 'admin_001',
@@ -77,57 +79,38 @@ export default function LoginPage() {
 
         console.log('Admin login successful');
 
-        // Trigger auth change event for navbar update
+
         window.dispatchEvent(new Event('authChange'));
 
-        // Redirect to admin dashboard
+
         setTimeout(() => {
           router.push('/admin');
         }, 100);
         return;
       }
 
-      // Check if user exists in localStorage (from registration)
-      const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-      const user = existingUsers.find(u => u.email === formData.email);
 
-      if (!user) {
-        setErrors({ email: 'Email tidak terdaftar atau belum melakukan registrasi' });
-        setIsLoading(false);
-        return;
-      }
+      // For regular users, use the new file-based system
+      const result = await login(formData.email, formData.password);
 
-      if (user.password !== formData.password) {
-        setErrors({ password: 'Password yang Anda masukkan salah' });
-        setIsLoading(false);
-        return;
-      }
+      if (result.success) {
+        console.log('Login successful:', result.user);
 
-      // Login successful
-      const authToken = `token_${Date.now()}_${Math.random()}`;
-      const userData = {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        phone: user.phone || '',
-        address: user.address || '',
-        dateOfBirth: user.dateOfBirth || ''
-      };
-
-      localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('authToken', authToken);
-
-      console.log('Login successful, user data saved:', userData);
-
-      // Trigger auth change event for navbar update
-      window.dispatchEvent(new Event('authChange'));
-
-      // Small delay to ensure state updates, then redirect
-      setTimeout(() => {
+        // Redirect after successful login
         const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
         localStorage.removeItem('redirectAfterLogin');
-        router.push(redirectPath);
-      }, 100);
+
+        setTimeout(() => {
+          router.push(redirectPath);
+        }, 100);
+      } else {
+        // Handle login errors
+        if (result.error === 'Invalid credentials') {
+          setErrors({ email: 'Email atau password tidak valid' });
+        } else {
+          setErrors({ email: result.error });
+        }
+      }
 
     } catch (error) {
       console.error('Login error:', error);
@@ -139,7 +122,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      {/* Fixed header with back button */}
+
       <div className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <Link
@@ -152,10 +135,10 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Main content */}
+
       <div className="flex items-center justify-center min-h-screen py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
-          {/* Logo */}
+
           <div className="flex justify-center">
             <Link href="/" className="flex items-center space-x-1 group">
               <span className="text-4xl font-bold text-black group-hover:text-gray-800 transition-colors duration-200">Telecom</span>
@@ -189,7 +172,7 @@ export default function LoginPage() {
               </div>
             )}
 
-            {/* Email */}
+
             <div>
               <label htmlFor="email" className="block text-sm font-bold text-black mb-3">
                 Alamat Email
@@ -218,7 +201,7 @@ export default function LoginPage() {
               </p>}
             </div>
 
-            {/* Password */}
+
             <div>
               <label htmlFor="password" className="block text-sm font-bold text-black mb-3">
                 Password
@@ -258,7 +241,7 @@ export default function LoginPage() {
               </p>}
             </div>
 
-            {/* Remember Me & Forgot Password */}
+
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <input
@@ -279,7 +262,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Submit Button */}
+
             <div className="pt-4">
               <button
                 type="submit"
@@ -302,7 +285,7 @@ export default function LoginPage() {
             </div>
           </form>
 
-          {/* Register Link */}
+
           <div className="mt-10">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

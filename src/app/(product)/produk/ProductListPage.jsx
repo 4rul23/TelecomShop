@@ -156,6 +156,7 @@ export default function ProductListPage() {
             {/* Desktop Filter Sidebar */}
             <div className="hidden lg:block w-80">
               <FilterSidebar
+                id="desktop"
                 categories={categories}
                 products={allProducts}
                 selectedCategories={selectedCategories}
@@ -211,6 +212,7 @@ export default function ProductListPage() {
         activeFiltersCount={activeFiltersCount}
       >
         <FilterSidebar
+          id="mobile"
           categories={categories}
           products={allProducts}
           selectedCategories={selectedCategories}

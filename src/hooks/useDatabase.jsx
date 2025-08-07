@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 
-// Simple localStorage utilities
+
 const safeJsonParse = (str, defaultValue = null) => {
   if (typeof window === 'undefined') return defaultValue;
 
@@ -38,7 +38,7 @@ const safeLocalStorageSet = (key, value) => {
   }
 };
 
-// Hook untuk mengelola cart
+
 export const useCart = () => {
   const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -58,16 +58,16 @@ export const useCart = () => {
   const addToCart = (product, quantity = 1) => {
     if (!isClient) return;
 
-    // Check if user is logged in before adding to cart
+
     const userData = localStorage.getItem('user');
     const authToken = localStorage.getItem('authToken');
 
     if (!userData || !authToken) {
-      // Use global toast function if available
+
       if (typeof window !== 'undefined' && window.showAuthToast) {
         window.showAuthToast('menambahkan produk ke keranjang');
       } else {
-        // Fallback
+
         const shouldRedirect = confirm(
           `🛒 Anda harus login untuk menambahkan produk ke keranjang\n\nKlik OK untuk pergi ke halaman login, atau Cancel untuk tetap di halaman ini.`
         );
@@ -145,13 +145,13 @@ export const useCart = () => {
     clearCart,
     getTotalItems,
     getTotalPrice,
-    getItemCount: getTotalItems, // Alias untuk kompatibilitas
-    getTotal: getTotalPrice, // Alias untuk cart page
+    getItemCount: getTotalItems,
+    getTotal: getTotalPrice,
     isClient
   };
 };
 
-// Hook untuk mengelola wishlist
+
 export const useWishlist = () => {
   const [wishlist, setWishlist] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -212,7 +212,7 @@ export const useWishlist = () => {
   };
 };
 
-// Hook untuk mengelola orders
+
 export const useOrders = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);

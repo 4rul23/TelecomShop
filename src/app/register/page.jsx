@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '../../contexts/AuthContext';
 import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowLeft } from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { register } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -25,7 +27,7 @@ export default function RegisterPage() {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
+
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -79,20 +81,31 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Use the new file-based registration system
+      const result = await register({
+        name: formData.name.trim(),
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone || ''
+      });
 
-      // Check if email already exists
-      const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-      const userExists = existingUsers.find(u => u.email === formData.email);
+      if (result.success) {
+        console.log('Registration successful:', result.user);
 
-      if (userExists) {
-        setErrors({ email: 'Email sudah terdaftar. Silakan gunakan email lain.' });
-        setIsLoading(false);
-        return;
+        // Show success message or redirect
+        setTimeout(() => {
+          router.push('/');
+        }, 1000);
+      } else {
+        // Handle registration errors
+        if (result.error === 'User already exists') {
+          setErrors({ email: 'Email sudah terdaftar. Silakan gunakan email lain.' });
+        } else {
+          setErrors({ general: result.error });
+        }
       }
 
-      // Create new user
+
       const newUser = {
         id: `user_${Date.now()}_${Math.random()}`,
         name: formData.name.trim(),
@@ -104,11 +117,11 @@ export default function RegisterPage() {
         createdAt: new Date().toISOString()
       };
 
-      // Save to localStorage
+
       const updatedUsers = [...existingUsers, newUser];
       localStorage.setItem('registeredUsers', JSON.stringify(updatedUsers));
 
-      // Auto login after registration
+
       const authToken = `token_${Date.now()}_${Math.random()}`;
       const userData = {
         id: newUser.id,
@@ -122,7 +135,7 @@ export default function RegisterPage() {
       localStorage.setItem('user', JSON.stringify(userData));
       localStorage.setItem('authToken', authToken);
 
-      // Update registered users if exists
+
       const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
       const userIndex = registeredUsers.findIndex(u => u.id === newUser.id);
       if (userIndex !== -1) {
@@ -132,10 +145,10 @@ export default function RegisterPage() {
 
       console.log('Registration successful, user data saved:', userData);
 
-      // Trigger auth change event for navbar update
+
       window.dispatchEvent(new Event('authChange'));
 
-      // Small delay to ensure state updates, then redirect
+
       setTimeout(() => {
         router.push('/');
       }, 100);
@@ -151,7 +164,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative z-0">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        {/* Back to Home */}
+
         <div className="flex justify-center mb-8">
           <Link
             href="/"
@@ -162,7 +175,7 @@ export default function RegisterPage() {
           </Link>
         </div>
 
-        {/* Logo */}
+
         <div className="flex justify-center mb-8">
           <Link href="/" className="flex items-center space-x-1 group">
             <span className="text-4xl font-bold text-black group-hover:text-gray-800 transition-colors duration-200">Telecom</span>
@@ -198,7 +211,7 @@ export default function RegisterPage() {
               </div>
             )}
 
-            {/* Name */}
+
             <div>
               <label htmlFor="name" className="block text-sm font-bold text-black mb-3">
                 Nama Lengkap
@@ -227,7 +240,7 @@ export default function RegisterPage() {
               </p>}
             </div>
 
-            {/* Email */}
+
             <div>
               <label htmlFor="email" className="block text-sm font-bold text-black mb-3">
                 Alamat Email
@@ -256,7 +269,7 @@ export default function RegisterPage() {
               </p>}
             </div>
 
-            {/* Phone */}
+
             <div>
               <label htmlFor="phone" className="block text-sm font-bold text-black mb-3">
                 Nomor Telepon <span className="text-gray-500 font-normal">(Opsional)</span>
@@ -285,7 +298,7 @@ export default function RegisterPage() {
               </p>}
             </div>
 
-            {/* Password */}
+
             <div>
               <label htmlFor="password" className="block text-sm font-bold text-black mb-3">
                 Password
@@ -325,7 +338,7 @@ export default function RegisterPage() {
               </p>}
             </div>
 
-            {/* Confirm Password */}
+
             <div>
               <label htmlFor="confirmPassword" className="block text-sm font-bold text-black mb-3">
                 Konfirmasi Password
@@ -365,7 +378,7 @@ export default function RegisterPage() {
               </p>}
             </div>
 
-            {/* Submit Button */}
+
             <div className="pt-4">
               <button
                 type="submit"
@@ -388,7 +401,7 @@ export default function RegisterPage() {
             </div>
           </form>
 
-          {/* Login Link */}
+
           <div className="mt-10">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">

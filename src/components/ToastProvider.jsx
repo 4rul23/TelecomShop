@@ -12,7 +12,7 @@ export const ToastProvider = ({ children }) => {
 
   const showAuthToast = (action = 'melakukan aksi ini') => {
     const handleLoginClick = () => {
-      // Store the current URL to redirect back after login
+
       const currentUrl = window.location.pathname + window.location.search;
       localStorage.setItem('redirectAfterLogin', currentUrl);
       router.push('/login');
@@ -21,7 +21,7 @@ export const ToastProvider = ({ children }) => {
     return showLoginRequired(action, handleLoginClick);
   };
 
-  // Make showAuthToast globally available
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.showAuthToast = showAuthToast;

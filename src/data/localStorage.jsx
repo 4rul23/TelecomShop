@@ -1,4 +1,4 @@
-// Utils untuk localStorage management
+
 class LocalStorageDB {
   constructor() {
     this.KEYS = {
@@ -10,10 +10,10 @@ class LocalStorageDB {
     };
   }
 
-  // Safe JSON parse dengan error handling
+
   safeJsonParse(str, defaultValue = null) {
     if (typeof window === 'undefined') return defaultValue;
-    
+
     try {
       return JSON.parse(str);
     } catch (error) {
@@ -22,10 +22,10 @@ class LocalStorageDB {
     }
   }
 
-  // Safe localStorage get dengan error handling
+
   safeLocalStorageGet(key, defaultValue = null) {
     if (typeof window === 'undefined') return defaultValue;
-    
+
     try {
       const item = localStorage.getItem(key);
       return item ? this.safeJsonParse(item, defaultValue) : defaultValue;
@@ -35,10 +35,10 @@ class LocalStorageDB {
     }
   }
 
-  // Safe localStorage set dengan error handling
+
   safeLocalStorageSet(key, value) {
     if (typeof window === 'undefined') return false;
-    
+
     try {
       localStorage.setItem(key, JSON.stringify(value));
       return true;
@@ -48,7 +48,7 @@ class LocalStorageDB {
     }
   }
 
-  // Cart management
+
   getCart() {
     return this.safeLocalStorageGet(this.KEYS.CART, []);
   }
@@ -60,13 +60,13 @@ class LocalStorageDB {
   addToCart(product, quantity = 1) {
     const cart = this.getCart();
     const existingItem = cart.find(item => item.id === product.id);
-    
+
     if (existingItem) {
       existingItem.quantity += quantity;
     } else {
       cart.push({ ...product, quantity });
     }
-    
+
     this.setCart(cart);
     return cart;
   }
@@ -81,7 +81,7 @@ class LocalStorageDB {
   updateCartQuantity(productId, quantity) {
     const cart = this.getCart();
     const item = cart.find(item => item.id === productId);
-    
+
     if (item) {
       if (quantity <= 0) {
         return this.removeFromCart(productId);
@@ -90,7 +90,7 @@ class LocalStorageDB {
         this.setCart(cart);
       }
     }
-    
+
     return cart;
   }
 
@@ -99,7 +99,7 @@ class LocalStorageDB {
     return [];
   }
 
-  // Orders management
+
   getOrders() {
     return this.safeLocalStorageGet(this.KEYS.ORDERS, []);
   }
@@ -112,7 +112,7 @@ class LocalStorageDB {
       createdAt: new Date().toISOString(),
       status: 'pending'
     };
-    
+
     orders.unshift(newOrder);
     this.safeLocalStorageSet(this.KEYS.ORDERS, orders);
     return newOrder;
@@ -121,17 +121,17 @@ class LocalStorageDB {
   updateOrderStatus(orderId, status) {
     const orders = this.getOrders();
     const order = orders.find(o => o.id === orderId);
-    
+
     if (order) {
       order.status = status;
       order.updatedAt = new Date().toISOString();
       this.safeLocalStorageSet(this.KEYS.ORDERS, orders);
     }
-    
+
     return orders;
   }
 
-  // User management
+
   getUser() {
     return this.safeLocalStorageGet(this.KEYS.USER, null);
   }
@@ -146,7 +146,7 @@ class LocalStorageDB {
     }
   }
 
-  // Products management (untuk admin)
+
   getProducts() {
     return this.safeLocalStorageGet(this.KEYS.PRODUCTS, []);
   }
@@ -162,7 +162,7 @@ class LocalStorageDB {
       ...product,
       createdAt: new Date().toISOString()
     };
-    
+
     products.push(newProduct);
     this.setProducts(products);
     return newProduct;
@@ -171,12 +171,12 @@ class LocalStorageDB {
   updateProduct(productId, updatedProduct) {
     const products = this.getProducts();
     const index = products.findIndex(p => p.id === productId);
-    
+
     if (index !== -1) {
       products[index] = { ...products[index], ...updatedProduct };
       this.setProducts(products);
     }
-    
+
     return products;
   }
 
@@ -187,7 +187,7 @@ class LocalStorageDB {
     return updatedProducts;
   }
 
-  // Favorites management
+
   getFavorites() {
     return this.safeLocalStorageGet(this.KEYS.FAVORITES, []);
   }
@@ -213,7 +213,7 @@ class LocalStorageDB {
     return favorites.includes(productId);
   }
 
-  // Utility methods
+
   getTotalCartItems() {
     const cart = this.getCart();
     return cart.reduce((total, item) => total + item.quantity, 0);
@@ -224,7 +224,7 @@ class LocalStorageDB {
     return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
   }
 
-  // Clear all data (untuk reset)
+
   clearAllData() {
     if (typeof window !== 'undefined') {
       Object.values(this.KEYS).forEach(key => {
@@ -233,7 +233,7 @@ class LocalStorageDB {
     }
   }
 
-  // Export data untuk backup
+
   exportData() {
     const data = {};
     Object.entries(this.KEYS).forEach(([name, key]) => {
@@ -242,7 +242,7 @@ class LocalStorageDB {
     return data;
   }
 
-  // Import data dari backup
+
   importData(data) {
     Object.entries(data).forEach(([name, value]) => {
       const key = this.KEYS[name];
@@ -252,12 +252,12 @@ class LocalStorageDB {
     });
   }
 
-  // Search products di localStorage
+
   searchProducts(query) {
     const products = this.getProducts();
     const lowercaseQuery = query.toLowerCase();
-    
-    return products.filter(product => 
+
+    return products.filter(product =>
       product.name.toLowerCase().includes(lowercaseQuery) ||
       product.description.toLowerCase().includes(lowercaseQuery) ||
       product.category.toLowerCase().includes(lowercaseQuery) ||
@@ -265,15 +265,15 @@ class LocalStorageDB {
     );
   }
 
-  // Get products by category
+
   getProductsByCategory(category) {
     const products = this.getProducts();
-    return products.filter(product => 
+    return products.filter(product =>
       product.category.toLowerCase() === category.toLowerCase()
     );
   }
 
-  // Get featured products
+
   getFeaturedProducts(limit = 8) {
     const products = this.getProducts();
     return products
@@ -282,7 +282,7 @@ class LocalStorageDB {
   }
 }
 
-// Create and export singleton instance
+
 const db = new LocalStorageDB();
 
 export { db };

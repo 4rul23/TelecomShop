@@ -19,7 +19,7 @@ function NavigationBar() {
   const { isLoggedIn, user, logout } = useAuth();
   const { showLoginRequired } = useToastContext();
 
-  // Handle cart access with auth protection
+
   const handleCartClick = () => {
     if (!isLoggedIn) {
       showLoginRequired('mengakses keranjang belanja');
@@ -28,7 +28,7 @@ function NavigationBar() {
     router.push('/cart');
   };
 
-  // Check if user is admin
+
   const isAdmin = () => {
     if (!user) return false;
     return user.email === 'admin@telecomshop.com' ||
@@ -36,7 +36,7 @@ function NavigationBar() {
            user.email.includes('admin');
   };
 
-  // Handle search functionality
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -56,7 +56,7 @@ function NavigationBar() {
     }
   };
 
-  // Close user menu when clicking outside
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
@@ -70,7 +70,7 @@ function NavigationBar() {
     };
   }, []);
 
-  // Function untuk menentukan apakah link sedang aktif
+
   const isActiveLink = (href) => {
     if (href === '/') {
       return pathname === '/';
@@ -82,7 +82,7 @@ function NavigationBar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-b border-gray-200/50 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo dengan design typography hitam & merah */}
+
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center space-x-1 transition-all duration-300 hover:scale-105">
               <span className="text-2xl font-bold text-gray-900">
@@ -94,7 +94,7 @@ function NavigationBar() {
             </Link>
           </div>
 
-          {/* Desktop Navigation - Sekarang di tengah dengan active state */}
+
           <div className="hidden md:flex items-center space-x-8">
             <Link
               href="/"
@@ -126,9 +126,24 @@ function NavigationBar() {
                   : 'w-0 group-hover:w-full'
               }`}></span>
             </Link>
+            <Link
+              href="/about"
+              className={`relative group px-4 py-2 font-medium transition-all duration-200 ${
+                isActiveLink('/about')
+                  ? 'text-red-600'
+                  : 'text-gray-900 hover:text-red-600'
+              }`}
+            >
+              About
+              <span className={`absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-red-500 to-red-600 transition-all duration-300 ${
+                isActiveLink('/about')
+                  ? 'w-full'
+                  : 'w-0 group-hover:w-full'
+              }`}></span>
+            </Link>
           </div>
 
-          {/* Search Bar - Improved */}
+
           <div className="hidden md:flex items-center space-x-4">
             <form onSubmit={handleSearch} className="relative group">
               <input
@@ -147,7 +162,7 @@ function NavigationBar() {
               </button>
             </form>
 
-            {/* Shopping Cart - Only show if logged in */}
+
             {isLoggedIn && (
               <Link
                 href="/cart"
@@ -162,7 +177,7 @@ function NavigationBar() {
               </Link>
             )}
 
-            {/* Shopping Cart for non-logged users - redirect to login */}
+
             {!isLoggedIn && (
               <button
                 onClick={handleCartClick}
@@ -172,7 +187,7 @@ function NavigationBar() {
               </button>
             )}
 
-            {/* User Authentication */}
+
             {isLoggedIn ? (
               <div className="relative" ref={userMenuRef}>
                 <button
@@ -185,7 +200,7 @@ function NavigationBar() {
                   <span className="font-medium text-sm">{user?.name || 'User'}</span>
                 </button>
 
-                {/* User Dropdown Menu */}
+
                 {isUserMenuOpen && (
                   <div className="absolute right-0 mt-2 w-56 bg-white/95 backdrop-blur-lg rounded-lg shadow-lg border border-gray-200 py-2 z-20">
                     <div className="px-4 py-2 border-b border-gray-100">
@@ -247,7 +262,7 @@ function NavigationBar() {
             )}
           </div>
 
-          {/* Mobile menu button */}
+
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -259,7 +274,7 @@ function NavigationBar() {
         </div>
       </div>
 
-      {/* Mobile menu dengan active state */}
+
       {isMobileMenuOpen && (
         <div className="md:hidden bg-white/95 backdrop-blur-lg border-t border-gray-200">
           <div className="px-4 pt-4 pb-6 space-y-3">
@@ -305,7 +320,18 @@ function NavigationBar() {
             >
               Products
             </Link>
-            {/* Mobile Shopping Cart - Only show if logged in */}
+            <Link
+              href="/about"
+              className={`block px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
+                isActiveLink('/about')
+                  ? 'text-red-600 bg-red-50'
+                  : 'text-gray-900 hover:text-red-600 hover:bg-red-50'
+              }`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              About
+            </Link>
+
             {isLoggedIn && (
               <Link
                 href="/cart"
@@ -322,7 +348,7 @@ function NavigationBar() {
               </Link>
             )}
 
-            {/* Mobile Shopping Cart for non-logged users */}
+
             {!isLoggedIn && (
               <button
                 onClick={() => {
@@ -336,7 +362,7 @@ function NavigationBar() {
               </button>
             )}
 
-            {/* Mobile User Menu */}
+
             {isLoggedIn ? (
               <>
                 <div className="px-4 py-3 text-sm text-gray-500 border-t border-gray-200 mt-4">
@@ -404,5 +430,5 @@ function NavigationBar() {
   );
 }
 
-// Export named untuk menghindari masalah import
+
 export { NavigationBar };

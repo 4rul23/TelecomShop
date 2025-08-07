@@ -13,7 +13,7 @@ import {
   BarChart3
 } from 'lucide-react';
 
-// Import komponen admin
+
 import OverviewTab from './components/OverviewTab';
 import ProductsTab from './components/ProductsTab';
 import OrdersTab from './components/OrdersTab';
@@ -29,7 +29,7 @@ export default function AdminDashboard() {
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
 
-  // Safe JSON parse utility
+
   const safeJsonParse = (str, fallback = null) => {
     try {
       if (!str || str === 'undefined' || str === 'null') {
@@ -42,12 +42,12 @@ export default function AdminDashboard() {
     }
   };
 
-  // Check admin authentication
+
   useEffect(() => {
     checkAdminAuth();
   }, []);
 
-  // Load data with polling
+
   useEffect(() => {
     if (user) {
       loadData();
@@ -108,7 +108,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+
       <div className="bg-white shadow-sm border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
@@ -148,7 +148,7 @@ export default function AdminDashboard() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Navigation Tabs */}
+
         <div className="mb-8">
           <nav className="flex space-x-8 border-b border-gray-200">
             {[
@@ -177,7 +177,7 @@ export default function AdminDashboard() {
           </nav>
         </div>
 
-        {/* Tab Content */}
+
         {activeTab === 'overview' && (
           <OverviewTab
             products={products}

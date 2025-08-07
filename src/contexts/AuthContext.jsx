@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect } from 'react';
+import { useFileDatabase } from '../hooks/useFileDatabase';
 
 const AuthContext = createContext();
 
@@ -8,45 +9,66 @@ export function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const fileDB = useFileDatabase();
 
   useEffect(() => {
     checkAuth();
   }, []);
 
-  const checkAuth = () => {
-    const savedUser = localStorage.getItem('user');
-    const authToken = localStorage.getItem('authToken');
-    
-    if (savedUser && authToken) {
-      try {
-        const parsedUser = JSON.parse(savedUser);
-        setUser(parsedUser);
+  const checkAuth = async () => {
+    try {
+      const result = await fileDB.getCurrentUser();
+      if (result.success && result.user) {
+        setUser(result.user);
         setIsLoggedIn(true);
-      } catch (error) {
-        console.error('Error parsing user data:', error);
-        localStorage.removeItem('user');
-        localStorage.removeItem('authToken');
       }
+    } catch (error) {
+      console.error('Error checking auth:', error);
     }
     setLoading(false);
   };
 
-  const login = (userData) => {
-    const authToken = 'fake-jwt-token-' + Date.now();
-    
-    localStorage.setItem('user', JSON.stringify(userData));
-    localStorage.setItem('authToken', authToken);
-    
-    setUser(userData);
-    setIsLoggedIn(true);
+  const login = async (email, password) => {
+    try {
+      const result = await fileDB.loginUser(email, password);
+      if (result.success) {
+        setUser(result.user);
+        setIsLoggedIn(true);
+        return { success: true, user: result.user };
+      } else {
+        return { success: false, error: result.error };
+      }
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
   };
 
-  const logout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('authToken');
-    
-    setUser(null);
-    setIsLoggedIn(false);
+  const register = async (userData) => {
+    try {
+      const result = await fileDB.registerUser(userData);
+      if (result.success) {
+        // Auto login after registration
+        const loginResult = await login(userData.email, userData.password);
+        return loginResult;
+      } else {
+        return { success: false, error: result.error };
+      }
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await fileDB.logoutUser();
+      setUser(null);
+      setIsLoggedIn(false);
+    } catch (error) {
+      console.error('Error logging out:', error);
+      // Still clear local state even if API call fails
+      setUser(null);
+      setIsLoggedIn(false);
+    }
   };
 
   const value = {
@@ -54,6 +76,7 @@ export function AuthProvider({ children }) {
     user,
     loading,
     login,
+    register,
     logout,
     checkAuth
   };

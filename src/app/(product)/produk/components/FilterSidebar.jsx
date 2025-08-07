@@ -7,17 +7,9 @@ import {
   DollarSign,
   CheckCircle2
 } from 'lucide-react';
+import { PRICE_RANGES } from '../../../../data/products';
 
-// Constants
-const PRICE_RANGES = [
-  { label: "Semua", min: 0, max: 10000000 },
-  { label: "< Rp 500.000", min: 0, max: 500000 },
-  { label: "Rp 500.000 - 1.000.000", min: 500000, max: 1000000 },
-  { label: "Rp 1.000.000 - 2.000.000", min: 1000000, max: 2000000 },
-  { label: "Rp 2.000.000 - 5.000.000", min: 2000000, max: 5000000 },
-  { label: "> Rp 5.000.000", min: 5000000, max: 10000000 },
-];
-
+// Stock options constant
 const STOCK_OPTIONS = [
   { label: "Semua", value: "all" },
   { label: "Tersedia (>10)", value: "high" },
@@ -38,7 +30,8 @@ export default function FilterSidebar({
   setStockFilter,
   setCurrentPage,
   resetFilters,
-  activeFiltersCount
+  activeFiltersCount,
+  id = 'default' // Add unique identifier
 }) {
   return (
     <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
@@ -68,31 +61,36 @@ export default function FilterSidebar({
           Kategori
         </h4>
         <div className="space-y-3">
-          {categories.map((category) => (
-            <div key={category} className="flex items-center group">
+          {categories.map((category, index) => {
+            const categoryKey = typeof category === 'object' ? category.label || category.value : category;
+            const categoryDisplay = typeof category === 'object' ? category.label : category;
+            const categoryValue = typeof category === 'object' ? category.value : category;
+            return (
+            <div key={`${id}-category-${categoryKey}-${index}`} className="flex items-center group">
               <div className="relative">
                 <input
                   type="checkbox"
-                  id={`category-${category}`}
-                  checked={selectedCategories.includes(category)}
-                  onChange={() => toggleCategory(category)}
+                  id={`${id}-category-${categoryKey}`}
+                  checked={selectedCategories.includes(categoryValue)}
+                  onChange={() => toggleCategory(categoryValue)}
                   className="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500 focus:ring-offset-0"
                 />
-                {selectedCategories.includes(category) && (
+                {selectedCategories.includes(categoryValue) && (
                   <CheckCircle2 className="h-4 w-4 text-red-600 absolute top-0 left-0 pointer-events-none" />
                 )}
               </div>
               <label
-                htmlFor={`category-${category}`}
+                htmlFor={`${id}-category-${categoryKey}`}
                 className="ml-3 text-sm text-gray-700 cursor-pointer group-hover:text-gray-900 transition-colors"
               >
-                {category}
+                {categoryDisplay}
               </label>
               <span className="ml-auto text-xs text-gray-400">
-                ({products.filter(p => p.category === category).length})
+                ({products.filter(p => p.category === categoryValue).length})
               </span>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -104,17 +102,17 @@ export default function FilterSidebar({
         </h4>
         <div className="space-y-3">
           {PRICE_RANGES.map((range) => (
-            <div key={range.label} className="flex items-center">
+            <div key={`${id}-price-${range.label}`} className="flex items-center">
               <input
                 type="radio"
-                id={`price-${range.label}`}
-                name="priceRange"
+                id={`${id}-price-${range.label}`}
+                name={`${id}-priceRange`}
                 checked={selectedPriceRange === range.label}
                 onChange={() => handlePriceRangeSelect(range)}
                 className="h-4 w-4 text-red-600 focus:ring-red-500"
               />
               <label
-                htmlFor={`price-${range.label}`}
+                htmlFor={`${id}-price-${range.label}`}
                 className="ml-3 text-sm text-gray-700 cursor-pointer"
               >
                 {range.label}
@@ -156,11 +154,11 @@ export default function FilterSidebar({
         <h4 className="text-sm font-semibold text-gray-800 mb-4">Status Stok</h4>
         <div className="space-y-3">
           {STOCK_OPTIONS.map((option) => (
-            <div key={option.value} className="flex items-center">
+            <div key={`${id}-stock-${option.value}`} className="flex items-center">
               <input
                 type="radio"
-                id={`stock-${option.value}`}
-                name="stockFilter"
+                id={`${id}-stock-${option.value}`}
+                name={`${id}-stockFilter`}
                 checked={stockFilter === option.value}
                 onChange={() => {
                   setStockFilter(option.value);
@@ -169,7 +167,7 @@ export default function FilterSidebar({
                 className="h-4 w-4 text-red-600 focus:ring-red-500"
               />
               <label
-                htmlFor={`stock-${option.value}`}
+                htmlFor={`${id}-stock-${option.value}`}
                 className="ml-3 text-sm text-gray-700 cursor-pointer"
               >
                 {option.label}

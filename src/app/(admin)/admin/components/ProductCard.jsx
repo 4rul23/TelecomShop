@@ -13,10 +13,13 @@ export default function ProductCard({ product, onEdit, onDelete }) {
 
   // Get image source (prioritize images array, fallback to image property)
   const getImageSrc = () => {
-    if (product.images && product.images.length > 0) {
+    if (product.images && product.images.length > 0 && product.images[0]) {
       return product.images[0];
     }
-    return product.image || '/placeholder-product.svg';
+    if (product.image && product.image.trim() !== '') {
+      return product.image;
+    }
+    return '/placeholder-product.svg';
   };
 
   return (

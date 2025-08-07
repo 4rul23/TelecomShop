@@ -94,7 +94,7 @@ export default function ProductDetailPage() {
         const result = addToCart(product, quantity);
 
         // Only show success toast if addToCart actually succeeded
-        if (result !== false) { 
+        if (result !== false) {
           console.log('After adding to cart:', {
             product: product.name,
             quantity: quantity,
@@ -189,11 +189,14 @@ export default function ProductDetailPage() {
             <div className="sticky top-24">
               <div className="relative bg-gray-50 rounded-xl overflow-hidden shadow-sm border border-gray-200">
                 <Image
-                  src={product.image}
+                  src={product.image || "/tel.png"}
                   alt={product.name}
                   width={600}
                   height={600}
                   className="w-full h-80 lg:h-[500px] object-cover"
+                  onError={(e) => {
+                    e.target.src = "/tel.png";
+                  }}
                 />
 
                 <button
