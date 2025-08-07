@@ -5,8 +5,17 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock, ArrowLeft } from 'lucide-react';
+import ClientOnly from '../../components/ClientOnly';
 
 export default function LoginPage() {
+  return (
+    <ClientOnly>
+      <LoginContent />
+    </ClientOnly>
+  );
+}
+
+function LoginContent() {
   const router = useRouter();
   const { login } = useAuth();
   const [formData, setFormData] = useState({

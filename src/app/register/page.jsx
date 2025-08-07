@@ -5,8 +5,17 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '../../contexts/AuthContext';
 import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock, User, Phone, ArrowLeft } from 'lucide-react';
+import ClientOnly from '../../components/ClientOnly';
 
 export default function RegisterPage() {
+  return (
+    <ClientOnly>
+      <RegisterContent />
+    </ClientOnly>
+  );
+}
+
+function RegisterContent() {
   const router = useRouter();
   const { register } = useAuth();
   const [formData, setFormData] = useState({

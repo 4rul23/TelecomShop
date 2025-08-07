@@ -9,13 +9,17 @@ export function AuthProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isClient, setIsClient] = useState(false);
   const fileDB = useFileDatabase();
 
   useEffect(() => {
+    setIsClient(true);
     checkAuth();
   }, []);
 
   const checkAuth = async () => {
+    if (!isClient) return;
+    
     try {
       const result = await fileDB.getCurrentUser();
       if (result.success && result.user) {
@@ -75,6 +79,7 @@ export function AuthProvider({ children }) {
     isLoggedIn,
     user,
     loading,
+    isClient,
     login,
     register,
     logout,
