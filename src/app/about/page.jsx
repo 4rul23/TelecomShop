@@ -73,7 +73,7 @@ export default function AboutPage() {
             {/* Logo */}
             <div className="w-32 h-32 rounded-full flex items-center justify-center mb-8 shadow-lg bg-white border-4 border-red-100 overflow-hidden">
               <Image
-                src="/tel.png"
+                src="/telecom-shop-logo.png"
                 alt="TelecomShop Logo"
                 width={120}
                 height={120}

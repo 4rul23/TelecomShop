@@ -146,8 +146,8 @@ export default function Home() {
                   </div>
 
                   <Image
-                    src="/tel.png"
-                    alt="Peralatan Telekomunikasi SMK"
+                    src="/telecom-shop-logo.png"
+                    alt="TelecomShop - Peralatan Telekomunikasi SMK"
                     width={400}
                     height={400}
                     className="object-contain relative z-10 transform transition-transform duration-500 hover:scale-105 filter drop-shadow-lg"

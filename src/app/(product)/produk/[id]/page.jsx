@@ -189,7 +189,7 @@ export default function ProductDetailPage() {
             <div className="sticky top-24">
               <div className="relative bg-gray-50 rounded-xl overflow-hidden shadow-sm border border-gray-200">
                 <Image
-                  src={product.image || "/tel.png"}
+                    src={product.image || "/tel.png"}
                   alt={product.name}
                   width={600}
                   height={600}

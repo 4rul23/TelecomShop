@@ -7,6 +7,7 @@ import { Search, Menu, X, ShoppingCart, User, LogOut, Package, Shield } from 'lu
 import { useCart } from '../hooks/useDatabase';
 import { useAuth } from '../hooks/useAuth';
 import { useToastContext } from './ToastProvider';
+import Image from 'next/image'
 
 function NavigationBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -84,13 +85,15 @@ function NavigationBar() {
         <div className="flex items-center justify-between h-16">
 
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center space-x-1 transition-all duration-300 hover:scale-105">
-              <span className="text-2xl font-bold text-gray-900">
-                Telecom
-              </span>
-              <span className="text-2xl font-bold bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent">
-                Shop
-              </span>
+            <Link href="/" className="flex items-center space-x-3 transition-all duration-300 hover:scale-105">
+              <div className="flex items-center space-x-1">
+                <span className="text-2xl font-bold text-gray-900">
+                  Telecom
+                </span>
+                <span className="text-2xl font-bold bg-gradient-to-r from-red-600 to-red-500 bg-clip-text text-transparent">
+                  Shop
+                </span>
+              </div>
             </Link>
           </div>
 
