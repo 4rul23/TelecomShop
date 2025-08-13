@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
 
   const checkAuth = async () => {
     if (!isClient) return;
-    
+
     try {
       const result = await fileDB.getCurrentUser();
       if (result.success && result.user) {

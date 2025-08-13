@@ -9,7 +9,7 @@ export const PRODUCTS_DB = [
     image: "/products/Antena TP-Link CPE605 - Outdoor Wireless CPE 5GHz.jpeg",
     category: "Wireless",
     brand: "TP-Link",
-    description: "Antena outdoor 5GHz dengan gain tinggi 23dBi untuk koneksi jarak jauh. Ideal untuk point-to-point atau point-to-multipoint. Tahan terhadap kondisi cuaca ekstrem dengan desain IP65.",
+    description: "Antena outdoor wireless CPE 5GHz berkinerja tinggi dengan teknologi 802.11ac untuk koneksi point-to-point jarak jauh hingga 5km. Dilengkapi dengan directional antenna 23dBi gain yang memberikan fokus sinyal optimal dan throughput hingga 300Mbps. Tahan cuaca ekstrim dengan rating IP65 dan operating temperature -40°C hingga +70°C. Mudah dikonfigurasi dengan PoE power supply dan mounting hardware lengkap untuk instalasi tower atau pole. Ideal untuk backbone link, wireless bridge, dan WISP deployment.",
     specifications: {
       "Frequency": "5GHz",
       "Speed": "Up to 150Mbps",
@@ -30,7 +30,7 @@ export const PRODUCTS_DB = [
     image: "/products/Cable Tie.jpg",
     category: "Accessories",
     brand: "Generic",
-    description: "Cable tie digunakan untuk merapikan dan mengikat kabel dalam instalasi jaringan. Terbuat dari nylon berkualitas tinggi yang kuat dan tahan lama. Tersedia dalam berbagai ukuran.",
+    description: "Cable tie berkualitas tinggi dengan bahan nylon 66 tahan UV untuk pengorganisasian dan manajemen kabel profesional. Tersedia dalam berbagai ukuran dari 100mm hingga 900mm dengan tensile strength hingga 50lbs. Self-locking mechanism memastikan ikatan yang kuat dan permanen. Flame retardant rating UL94V-2 aman untuk aplikasi elektrikal. Tersedia dalam warna hitam dan putih, cocok untuk instalasi indoor, outdoor, data center, dan industrial applications.",
     specifications: {
       "Material": "Nylon",
       "Length": "200mm",
@@ -51,7 +51,7 @@ export const PRODUCTS_DB = [
     image: "/products/Converter TP-Link TL-FC311A-2 + TL-FC311B.jpg",
     category: "Fiber Optic",
     brand: "TP-Link",
-    description: "Media converter ini mengubah sinyal dari kabel tembaga menjadi fiber optic dan sebaliknya. Mendukung transmisi jarak jauh dengan kualitas tinggi. Cocok untuk menghubungkan dua jaringan berbeda.",
+    description: "Media converter profesional untuk konversi sinyal ethernet 10/100/1000Mbps ke fiber optic single-mode atau multimode dengan jarak transmisi hingga 20km. Dilengkapi dengan SFP slot yang mendukung berbagai jenis transceiver sesuai kebutuhan aplikasi. Auto-negotiation dan auto-MDI/MDIX memudahkan instalasi tanpa konfigurasi manual. LED indicator status membantu monitoring dan troubleshooting. Power supply eksternal 12V DC dengan mounting bracket untuk rack installation.",
     specifications: {
       "Port": "1x RJ45, 1x SFP",
       "Speed": "10/100/1000Mbps",
@@ -72,7 +72,7 @@ export const PRODUCTS_DB = [
     image: "/products/Crimping Tool.jpg",
     category: "Tools",
     brand: "Generic",
-    description: "Crimping tool digunakan untuk memasang konektor RJ45, RJ11, dan sejenisnya pada kabel jaringan atau telepon. Dilengkapi pemotong dan pengupas kabel. Desain ergonomis untuk kenyamanan kerja.",
+    description: "Tool crimping profesional heavy-duty untuk terminasi konektor RJ45, RJ11, RJ12 dan coaxial dengan precision die yang memberikan hasil crimp konsisten. Dilengkapi dengan ratcheting mechanism yang memastikan crimp sempurna setiap kali digunakan. Ergonomic handle dengan cushion grip mengurangi fatigue saat penggunaan intensif. Built-in wire stripper dan cable cutter menghemat waktu instalasi. Essential tool untuk teknisi jaringan, installer kabel, dan maintenance personel.",
     specifications: {
       "Type": "RJ45/RJ11",
       "Material": "Steel",
@@ -93,7 +93,7 @@ export const PRODUCTS_DB = [
     image: "/products/Fiber Optic Pigtail SC‑LC Simplex Single‑Mode UPC.webp",
     category: "Fiber Optic",
     brand: "Generic",
-    description: "Kabel serat optik pendek dengan konektor di satu ujung, digunakan untuk menyambungkan serat optik ke perangkat jaringan. Produk ini menggunakan konektor SC atau LC dengan finishing UPC (Ultra Physical Contact) yang menghasilkan redaman rendah dan kualitas transmisi tinggi. Dirancang untuk jaringan single mode, pigtail ini mampu menghantarkan data jarak jauh dengan kecepatan stabil. Lapisan pelindungnya kuat dan fleksibel, meminimalkan risiko kerusakan saat instalasi. Cocok digunakan pada patch panel, ODF, atau penyambungan splicing di proyek FTTH dan jaringan optik lainnya.",
+    description: "Pigtail fiber optic SC ke LC simplex single-mode UPC berkualitas premium dengan panjang 1.5 meter untuk koneksi equipment ke patch panel. Menggunakan ceramic ferrule grade A+ yang memberikan insertion loss rendah (<0.2dB) dan return loss tinggi (>55dB). Jacket PVC flame retardant dengan bend radius protection mencegah kerusakan serat optik. Color coding sesuai standar TIA untuk mudah identifikasi. Kompatibel dengan semua equipment yang menggunakan connector SC dan LC.",
     specifications: {
       "Connector": "SC to LC",
       "Type": "Single-mode",
@@ -114,7 +114,7 @@ export const PRODUCTS_DB = [
     image: "/products/Kabel LAN  Belden UTP Cat6 Cable (Solid Bare Copper, UTP).jpg",
     category: "Kabel",
     brand: "Belden",
-    description: "Kabel LAN Belden Cat6 berbahan tembaga murni solid, memastikan transmisi data cepat dan stabil. Cocok untuk jaringan rumah, kantor, maupun industri. Memiliki isolasi berkualitas untuk mengurangi interferensi.",
+    description: "Kabel LAN UTP Cat6 premium dengan solid bare copper conductor untuk performa jaringan superior. Memenuhi standar TIA/EIA-568-C.2 untuk instalasi jaringan enterprise dan residential. Kabel ini dirancang khusus untuk mendukung aplikasi Gigabit Ethernet dengan bandwidth hingga 250MHz, memberikan transmisi data yang stabil dan handal untuk berbagai kebutuhan networking modern.",
     specifications: {
       "Category": "Cat6",
       "Type": "UTP",
@@ -135,7 +135,7 @@ export const PRODUCTS_DB = [
     image: "/products/Keystone Jack.jpg",
     category: "Konektor",
     brand: "Generic",
-    description: "Digunakan sebagai port koneksi di panel patch atau wall plate. Kompatibel dengan kabel UTP Cat5e/Cat6. Memudahkan manajemen jaringan dan penggantian port.",
+    description: "Keystone jack Cat6 berkualitas tinggi untuk terminasi kabel UTP dalam sistem structured cabling. Dilengkapi dengan IDC terminal yang mudah dipasang tanpa memerlukan tools khusus. Kompatibel dengan standar T568A dan T568B, cocok untuk instalasi outlet jaringan, patch panel, dan surface mount box. Konstruksi yang robust memastikan koneksi yang stabil dan tahan lama.",
     specifications: {
       "Category": "Cat6",
       "Type": "UTP",
@@ -156,7 +156,7 @@ export const PRODUCTS_DB = [
     image: "/products/Konektor LC (Lucent Connector).png",
     category: "Konektor",
     brand: "Generic",
-    description: "Konektor LC adalah tipe konektor fiber optic dengan ukuran kecil dan mekanisme latch. Cocok untuk aplikasi high-density pada data center. Menawarkan kinerja tinggi dengan low insertion loss.",
+    description: "Konektor LC (Lucent Connector) premium untuk fiber optic single-mode dan multi-mode dengan form factor yang compact. Menggunakan teknologi push-pull coupling mechanism yang memudahkan instalasi dalam ruang terbatas. Dilengkapi dengan ceramic ferrule berkualitas tinggi yang memberikan insertion loss rendah dan return loss optimal. Ideal untuk aplikasi high-density dalam data center dan telecommunication equipment.",
     specifications: {
       "Type": "LC",
       "Mode": "Single/Multi-mode",
@@ -177,7 +177,7 @@ export const PRODUCTS_DB = [
     image: "/products/Konektor RJ45 Cat 6 UTP Connector.jpeg",
     category: "Konektor",
     brand: "Generic",
-    description: "Konektor RJ45 Cat6 untuk kabel UTP, mendukung transmisi data hingga 1 Gbps. Desain presisi untuk meminimalkan noise dan crosstalk. Digunakan pada instalasi jaringan Ethernet.",
+    description: "Konektor RJ45 Cat6 berkualitas profesional dengan gold plated contacts untuk kabel UTP. Dirancang khusus untuk mendukung performa Cat6 dengan frekuensi hingga 250MHz. Konstruksi yang presisi memastikan koneksi yang stabil dan tahan korosi. Dilengkapi dengan strain relief yang mencegah kerusakan pada titik sambungan kabel. Ideal untuk instalasi jaringan enterprise dan data center yang membutuhkan reliabilitas tinggi.",
     specifications: {
       "Category": "Cat6",
       "Type": "UTP",
@@ -198,7 +198,7 @@ export const PRODUCTS_DB = [
     image: "/products/Konektor ST (Straight Tip).jpg",
     category: "Konektor",
     brand: "Generic",
-    description: "Konektor ST untuk sambungan fiber optic dengan sistem bayonet. Cocok digunakan pada instalasi jaringan LAN berbasis fiber. Terbuat dari bahan berkualitas tinggi untuk koneksi stabil.",
+    description: "Konektor ST (Straight Tip) premium untuk fiber optic dengan mekanisme bayonet coupling yang aman dan mudah digunakan. Menggunakan ceramic ferrule berkualitas tinggi yang memberikan performa optik optimal dengan insertion loss rendah. Desain spring-loaded memastikan koneksi yang konsisten dan repeatable. Cocok untuk aplikasi multimode fiber dalam LAN, telekomunikasi, dan sistem fiber optic jarak pendek hingga menengah.",
     specifications: {
       "Type": "ST",
       "Mode": "Single/Multi-mode",
@@ -219,7 +219,7 @@ export const PRODUCTS_DB = [
     image: "/products/LS Kabel Coaxial RG6+ Power (300 m Roll).jpg",
     category: "Kabel",
     brand: "LS Cable",
-    description: "Kabel coaxial RG6+ dengan jalur power, panjang 300 meter, cocok untuk instalasi CCTV dan antena parabola. Lapisan pelindung ganda memastikan sinyal stabil dan tahan gangguan elektromagnetik.",
+    description: "Kabel coaxial RG6 premium dengan integrated power cable dalam kemasan roll 300 meter, ideal untuk instalasi CCTV dan sistem surveillance skala besar. Dilengkapi dengan quad shield construction untuk perlindungan optimal terhadap interferensi elektromagnetik. Power cable terintegrasi memudahkan instalasi dengan mengurangi jumlah kabel yang diperlukan. Jacket PE berkualitas tinggi tahan terhadap kondisi outdoor dan UV exposure.",
     specifications: {
       "Type": "RG6 + Power",
       "Length": "300m",
@@ -240,7 +240,7 @@ export const PRODUCTS_DB = [
     image: "/products/Modem TP-Link TL-MR6400 (4G LTE Router-Modem).jpeg",
     category: "Networking",
     brand: "TP-Link",
-    description: "Router-modem TL-MR6400 mendukung koneksi 4G LTE dengan kecepatan hingga 150 Mbps. Dilengkapi slot SIM card dan 4 port LAN. Ideal untuk lokasi yang belum terjangkau jaringan kabel.",
+    description: "4G LTE Router-Modem canggih dengan WiFi 802.11n untuk solusi internet mobile broadband yang handal. Mendukung semua operator seluler Indonesia dengan kecepatan download hingga 150Mbps. Dilengkapi dengan 3 port LAN Gigabit dan WiFi 300Mbps untuk konektivitas multiple device. Antena 4G eksternal dapat dilepas untuk penggunaan antena external berkekuatan tinggi. Ideal untuk backup internet, remote office, atau area tanpa infrastruktur fiber.",
     specifications: {
       "Network": "4G LTE",
       "WiFi": "802.11n 300Mbps",
@@ -261,7 +261,7 @@ export const PRODUCTS_DB = [
     image: "/products/Optical Power Meter_.jpg",
     category: "Tools",
     brand: "Generic",
-    description: "Optical power meter digunakan untuk mengukur daya optik pada jaringan fiber. Akurat dalam mendeteksi loss dan kekuatan sinyal. Cocok untuk instalasi, perawatan, dan troubleshooting jaringan optik.",
+    description: "Optical Power Meter profesional untuk mengukur daya sinyal fiber optic dengan akurasi tinggi. Mendukung multiple wavelength (850/1300/1310/1550nm) untuk testing berbagai jenis fiber dan sistem komunikasi. Dilengkapi dengan universal connector interface yang kompatibel dengan FC, SC, ST, dan LC. Display LCD dengan backlight memudahkan pembacaan dalam kondisi cahaya rendah. Essential tool untuk instalasi, maintenance, dan troubleshooting sistem fiber optic.",
     specifications: {
       "Range": "-70 to +10 dBm",
       "Wavelength": "850/1300/1310/1550nm",
@@ -282,7 +282,7 @@ export const PRODUCTS_DB = [
     image: "/products/Patch Cord SC–SC Simplex Single‑Mode APC (10 m).jpeg",
     category: "Fiber Optic",
     brand: "Generic",
-    description: "Kabel patch cord SC-SC simplex single-mode berjenis UPC, panjang 10 meter. Digunakan untuk menghubungkan perangkat jaringan fiber optic dengan akurasi tinggi. Memiliki lapisan pelindung untuk mencegah kerusakan serat.",
+    description: "Patch cord SC ke SC simplex single-mode APC premium sepanjang 10 meter dengan connector grade A untuk aplikasi high-performance. Menggunakan ceramic ferrule yang dipoles dengan precision optical polishing untuk mencapai insertion loss ultra-low (<0.15dB) dan return loss superior (>65dB). APC (Angled Physical Contact) 8° polish mengurangi back reflection untuk aplikasi analog video dan high-speed data. LSZH jacket ramah lingkungan dengan flame retardant properties. Ideal untuk backbone connection dan critical applications.",
     specifications: {
       "Connector": "SC to SC",
       "Type": "Single-mode",
@@ -303,7 +303,7 @@ export const PRODUCTS_DB = [
     image: "/products/Patch Cord SC–SC Simplex Single‑Mode UPC (10 m).jpeg",
     category: "Fiber Optic",
     brand: "Generic",
-    description: "Kabel fiber optik dengan konektor SC berpolish APC untuk mengurangi pantulan cahaya. Dirancang untuk jaringan single-mode jarak jauh dengan transmisi stabil. Cocok untuk instalasi FTTH, data center, dan perangkat telekomunikasi.",
+    description: "Patch cord SC ke SC simplex single-mode UPC berkualitas tinggi sepanjang 10 meter untuk koneksi equipment fiber optic standard. Menggunakan ceramic ferrule dengan UPC (Ultra Physical Contact) polish yang memberikan insertion loss rendah (<0.2dB) dan return loss optimal (>55dB). Konstruksi simplex memungkinkan transmisi satu arah yang ideal untuk aplikasi point-to-point. OFNR rated jacket tahan api dan fleksibel untuk instalasi dalam conduit atau cable tray. Compatible dengan semua equipment fiber optic yang menggunakan SC connector.",
     specifications: {
       "Connector": "SC to SC",
       "Type": "Single-mode",
@@ -324,7 +324,7 @@ export const PRODUCTS_DB = [
     image: "/products/Router Wi-fi TP-Link Archer C6.jpeg",
     category: "Networking",
     brand: "TP-Link",
-    description: "Router dual-band AC1200 dengan teknologi MU-MIMO untuk koneksi cepat dan stabil ke banyak perangkat. Mendukung mode router dan access point. Dilengkapi empat antena eksternal untuk jangkauan sinyal luas.",
+    description: "Router WiFi dual-band AC1200 dengan teknologi MU-MIMO untuk performa jaringan optimal di rumah dan kantor kecil. Menyediakan kecepatan kombinasi hingga 1200Mbps (300Mbps di 2.4GHz + 867Mbps di 5GHz) dengan coverage area hingga 200m². Dilengkapi 4 antena eksternal high-gain dan teknologi Beamforming untuk sinyal yang lebih fokus dan stabil. Fitur OneMesh memungkinkan pembentukan mesh network dengan range extender TP-Link yang kompatibel.",
     specifications: {
       "Standard": "802.11ac",
       "Speed": "1200Mbps",
@@ -345,7 +345,7 @@ export const PRODUCTS_DB = [
     image: "/products/Splicer (Fusion).jpg",
     category: "Tools",
     brand: "Generic",
-    description: "Alat penyambung fiber optik menggunakan metode fusi untuk hasil sambungan dengan loss sangat rendah. Cocok untuk proyek instalasi jaringan backbone atau distribusi. Dilengkapi layar LCD dan sistem align otomatis untuk presisi tinggi.",
+    description: "Fusion splicer profesional untuk penyambungan fiber optic dengan presisi tinggi dan splice loss ultra-low (<0.02dB untuk SM, <0.01dB untuk MM). Dilengkapi dengan dual motors dan active cladding alignment system untuk hasil splice yang konsisten. Built-in heater shrink sleeve dengan programmable heat cycle. Color LCD display 5 inci dengan menu user-friendly dan multilanguage support. Battery operation hingga 200 splice cycles, ideal untuk instalasi lapangan dan maintenance fiber optic network.",
     specifications: {
       "Type": "Core alignment",
       "Splice Loss": "<0.02dB",
@@ -366,7 +366,7 @@ export const PRODUCTS_DB = [
     image: "/products/Splitter_.jpg",
     category: "Fiber Optic",
     brand: "Generic",
-    description: "Perangkat pasif untuk membagi sinyal optik menjadi beberapa jalur tanpa memerlukan daya listrik. Umumnya digunakan dalam instalasi jaringan FTTH atau FTTx. Memiliki tingkat redaman rendah untuk menjaga kualitas transmisi data.",
+    description: "Optical splitter 1x8 PLC (Planar Lightwave Circuit) untuk pembagian sinyal fiber optic dengan uniformity tinggi dan insertion loss rendah. Mendukung wavelength range 1260-1650nm cocok untuk aplikasi FTTH, PON, dan CATV. Compact package dengan pigtail SC/APC connectors dan protective housing. Operating temperature range -40°C hingga +85°C untuk instalasi outdoor. Excess loss <1.0dB dan uniformity <0.4dB memastikan distribusi sinyal yang optimal ke semua output port.",
     specifications: {
       "Type": "PLC Splitter",
       "Ratio": "1x8",
@@ -387,7 +387,7 @@ export const PRODUCTS_DB = [
     image: "/products/Switch 8 Port D-Link DES-1008C.jpeg",
     category: "Networking",
     brand: "D-Link",
-    description: "Switch Ethernet dengan 8 port 10/100 Mbps untuk membagi koneksi internet ke banyak perangkat. Desain plug-and-play tanpa konfigurasi, cocok untuk rumah atau kantor kecil. Hemat energi dengan teknologi Green Ethernet.",
+    description: "Unmanaged switch 8 port Fast Ethernet untuk jaringan kecil dan home office yang membutuhkan ekspansi port jaringan. Plug-and-play design tidak memerlukan konfigurasi apapun, cukup hubungkan kabel dan langsung dapat digunakan. Dilengkapi dengan auto-MDI/MDIX yang otomatis mendeteksi jenis kabel (straight atau crossover). Green technology menghemat konsumsi daya hingga 80% dibanding switch konvensional. Compact design cocok untuk penempatan di desktop atau mounting ke dinding.",
     specifications: {
       "Ports": "8x 10/100Mbps",
       "Switching Capacity": "1.6Gbps",
@@ -408,7 +408,7 @@ export const PRODUCTS_DB = [
     image: "/products/Tester Kabel_.jpg",
     category: "Tools",
     brand: "Generic",
-    description: "Alat untuk menguji koneksi kabel LAN atau jaringan agar memastikan instalasi bebas dari putus atau sambungan yang salah. Memiliki indikator LED untuk menampilkan status koneksi setiap pin. Praktis digunakan oleh teknisi jaringan maupun instalator.",
+    description: "Cable tester multifungsi untuk pengujian kabel UTP, STP, dan coaxial dengan akurasi tinggi. Mampu mendeteksi berbagai jenis kerusakan seperti open circuit, short circuit, miswiring, dan crossed pairs. Dilengkapi LED indicator yang jelas untuk setiap pin/wire, memudahkan identifikasi masalah pada kabel. Desain portable dengan battery operation memungkinkan testing di lapangan tanpa sumber listrik eksternal. Essential tool untuk teknisi jaringan dan installer kabel.",
     specifications: {
       "Type": "UTP/STP/Coaxial",
       "Function": "Continuity test",
@@ -429,7 +429,7 @@ export const PRODUCTS_DB = [
     image: "/products/TP‑Link TL‑WA801ND – Access Point Wireless N300 (2.4 GHz).jpeg",
     category: "Wireless",
     brand: "TP-Link",
-    description: "Access Point Wireless N300 ini dirancang untuk memperluas jaringan Wi-Fi dengan kecepatan hingga 300 Mbps di frekuensi 2.4 GHz. Ideal untuk penggunaan di rumah, kantor kecil, atau area publik. Dilengkapi dengan antena eksternal yang dapat dilepas untuk jangkauan sinyal optimal.",
+    description: "Access Point Wireless N300 dual-mode untuk perluasan jaringan WiFi dengan kemampuan Access Point, Range Extender, dan Client mode. Mendukung kecepatan hingga 300Mbps dengan 2 antena eksternal 5dBi untuk coverage optimal. Dilengkapi dengan PoE support untuk instalasi fleksibel tanpa sumber listrik terpisah. WDS bridging memungkinkan koneksi wireless ke router utama. Web-based management dengan wizard setup yang user-friendly untuk konfigurasi mudah.",
     specifications: {
       "Standard": "802.11n",
       "Speed": "300Mbps",
@@ -450,7 +450,7 @@ export const PRODUCTS_DB = [
     image: "/products/CCTV.jpg",
     category: "Security",
     brand: "Generic",
-    description: "Kamera pengawas untuk keamanan rumah, kantor, atau area publik. Menyediakan rekaman real-time berkualitas tinggi. Mendukung pemantauan jarak jauh.",
+    description: "CCTV camera HD 1080p dengan teknologi AHD/TVI/CVI untuk keamanan dan monitoring area 24/7. Dilengkapi dengan IR night vision hingga 30 meter dan sensor CMOS high-sensitivity untuk gambar jernih dalam kondisi cahaya rendah. Weather resistant housing IP66 tahan terhadap cuaca ekstrim. Lens variofocal 2.8-12mm dengan angle coverage yang dapat disesuaikan. Mendukung rekaman motion detection dan remote viewing via smartphone app.",
     specifications: {
       "Resolution": "1080p HD",
       "Night Vision": "Up to 20m",
@@ -471,7 +471,7 @@ export const PRODUCTS_DB = [
     image: "/products/Ground Tester -Earth Resistance Tester.jpeg",
     category: "Tools",
     brand: "Generic",
-    description: "Mengukur tahanan tanah untuk memastikan sistem pembumian aman. Penting pada instalasi listrik dan proteksi petir. Memberikan data presisi tinggi.",
+    description: "Ground tester digital precision untuk mengukur resistansi tanah dan sistem grounding dengan akurasi 0.01Ω. Menggunakan metode pengukuran 3-pole dan 4-pole sesuai standar IEEE untuk hasil yang akurat. Auto range measurement dengan display LCD backlight yang mudah dibaca. Built-in memory menyimpan hingga 99 hasil pengukuran dengan timestamp. Dilengkapi dengan lead wire set dan ground spike untuk pengukuran di lapangan. Essential untuk commissioning electrical installation dan lightning protection system.",
     specifications: {
       "Range": "0.01Ω to 2000Ω",
       "Accuracy": "±2%",
@@ -492,7 +492,7 @@ export const PRODUCTS_DB = [
     image: "/products/Laser fiber optic.jpg",
     category: "Tools",
     brand: "Generic",
-    description: "Sumber cahaya laser untuk pengujian jaringan fiber optik. Memberikan sinyal stabil untuk deteksi kerusakan atau redaman. Cocok untuk teknisi lapangan dan laboratorium.",
+    description: "Laser tester visual fault locator untuk fiber optic dengan output power 1mW pada wavelength 650nm untuk troubleshooting dan identifikasi kerusakan fiber. Continuous wave dan pulsed mode operation memudahkan tracing fiber dalam bundle cable. Compact design dengan battery operation hingga 8 jam continuous use. Universal connector adapter mendukung FC, SC, ST, dan LC connectors. LED indicator menunjukkan status power dan mode operasi. Essential tool untuk maintenance dan commissioning fiber optic network.",
     specifications: {
       "Wavelength": "650nm",
       "Power": "1mW",
@@ -513,7 +513,7 @@ export const PRODUCTS_DB = [
     image: "/products/LS Kabel Coaxial RG6+ Power.jpg",
     category: "Kabel",
     brand: "LS Cable",
-    description: "Kabel coaxial RG6+ dengan jalur power, panjang 300 meter, cocok untuk instalasi CCTV dan antena parabola. Lapisan pelindung ganda memastikan sinyal stabil dan tahan gangguan elektromagnetik.",
+    description: "Kabel coaxial RG6 premium dengan integrated power cable per meter untuk fleksibilitas instalasi CCTV dan surveillance system. Menggunakan conductor tembaga berkualitas tinggi dengan impedansi 75 ohm yang stabil untuk transmisi video analog dan digital. Quad shield construction memberikan perlindungan maksimal terhadap interferensi elektromagnetik dan crosstalk. Jacket PE tahan UV cocok untuk instalasi outdoor dan indoor. Power cable 18AWG terintegrasi menghemat waktu dan biaya instalasi.",
     specifications: {
       "Type": "RG6 + Power",
       "Length": "Per meter",
@@ -534,7 +534,7 @@ export const PRODUCTS_DB = [
     image: "/products/Measuring Receiver.jpg",
     category: "Tools",
     brand: "Generic",
-    description: "Perangkat pengukur frekuensi dan daya sinyal dengan presisi tinggi. Cocok untuk kalibrasi instrumen laboratorium. Memenuhi standar internasional pengujian.",
+    description: "Measuring receiver spektrum analyzer untuk pengukuran sinyal RF dan TV broadcasting dengan frequency range 5MHz-3GHz. Dilengkapi dengan high-resolution TFT display dan advanced measurement functions seperti channel power, occupied bandwidth, dan ACPR. Built-in pre-amplifier meningkatkan sensitivity untuk weak signal measurement. Battery operation dengan charging dock untuk portable field testing. Pre-loaded TV standards (DVB-T/T2, ATSC, ISDB-T) dan LTE signal analysis untuk comprehensive RF testing.",
     specifications: {
       "Frequency Range": "5-2150 MHz",
       "Input Level": "-30 to +30 dBm",
@@ -555,7 +555,7 @@ export const PRODUCTS_DB = [
     image: "/products/Multimeter.jpg",
     category: "Tools",
     brand: "Generic",
-    description: "Alat ukur listrik untuk tegangan, arus, dan resistansi. Dapat digunakan untuk perawatan dan perbaikan peralatan elektronik. Praktis dengan hasil akurat.",
+    description: "Multimeter digital true-RMS dengan 6000 counts display untuk pengukuran voltage AC/DC, current, resistance, capacitance, frequency, dan temperature dengan akurasi tinggi. Dilengkapi dengan auto-ranging, data hold, dan min/max recording functions. Safety rating CAT III 1000V/CAT IV 600V untuk aplikasi electrical dan industrial. Backlit LCD display dengan bargraph untuk trend indication. Non-contact voltage detection dan audible continuity buzzer untuk safety testing.",
     specifications: {
       "DC Voltage": "200mV-1000V",
       "AC Voltage": "200V-750V",
@@ -576,7 +576,7 @@ export const PRODUCTS_DB = [
     image: "/products/ONU.jpg",
     category: "Networking",
     brand: "Generic",
-    description: "Perangkat penerima sinyal fiber optik dari OLT dan mengubahnya menjadi sinyal data untuk perangkat pengguna. Mendukung koneksi internet cepat dan stabil untuk rumah maupun kantor. Ideal untuk jaringan FTTH dengan kualitas transmisi tinggi.",
+    description: "ONU (Optical Network Unit) GPON untuk konversi sinyal fiber optic ke ethernet dalam deployment FTTH dan business applications. Mendukung downstream 2.5Gbps dan upstream 1.25Gbps sesuai standar ITU-T G.984. Dilengkapi dengan 4 port Gigabit Ethernet, 2 port POTS untuk voice service, dan WiFi 802.11n built-in. Web management interface dengan remote provisioning capability dari OLT. Compact desktop design dengan external power adapter dan wall mounting option.",
     specifications: {
       "Ports": "1x GPON, 4x GE",
       "Speed": "1.25Gbps downstream",
@@ -597,7 +597,7 @@ export const PRODUCTS_DB = [
     image: "/products/Optical Spectrum Analyzer (OSA).jpg",
     category: "Tools",
     brand: "Generic",
-    description: "Alat analisis spektrum optik untuk memeriksa panjang gelombang dan kualitas sinyal fiber. Digunakan pada instalasi dan pemeliharaan jaringan optik. Memberikan hasil visual detail spektrum cahaya.",
+    description: "Optical spectrum analyzer (OSA) precision instrument untuk analisis sinyal fiber optic dengan wavelength range 1250-1650nm dan resolution 0.05nm. Dilengkapi dengan high-sensitivity detector untuk pengukuran DWDM, CWDM, dan fiber laser applications. Built-in OTDR function untuk distance measurement dan fault location. Touch screen interface dengan measurement wizards untuk user-friendly operation. Data logging dan PC connectivity untuk advanced analysis dan reporting. Essential untuk R&D, manufacturing, dan field maintenance fiber optic systems.",
     specifications: {
       "Wavelength Range": "600-1700nm",
       "Resolution": "0.1nm",
@@ -618,7 +618,7 @@ export const PRODUCTS_DB = [
     image: "/products/Patch Cord SC–SC Simplex Single‑Mode APC.jpg",
     category: "Fiber Optic",
     brand: "Generic",
-    description: "Patch cord SC ke SC simplex single-mode APC (versi alternatif).",
+    description: "Patch cord SC ke SC simplex single-mode APC alternatif dengan premium grade connectors untuk aplikasi high-end. Menggunakan ultra-low insertion loss ferrule (<0.1dB) dan superior return loss (>65dB) untuk mission-critical installations. Triple-tested quality assurance memastikan performa konsisten. Bend-insensitive fiber G.657.A1 mengurangi signal loss pada radius bengkok kecil. LSZH jacket dengan pulling eye untuk instalasi dalam tight spaces dan cable management systems.",
     specifications: {
       "Connector": "SC to SC",
       "Type": "Single-mode",
@@ -639,7 +639,7 @@ export const PRODUCTS_DB = [
     image: "/products/Patch Panel.jpeg",
     category: "Networking",
     brand: "Generic",
-    description: "Panel penghubung kabel jaringan untuk manajemen koneksi yang rapi. Memudahkan identifikasi dan pengaturan port. Cocok untuk data center dan instalasi LAN.",
+    description: "Patch panel 24 port Cat6 untuk manajemen kabel jaringan dalam rack system 19 inci. Menggunakan keystone jack design yang memungkinkan fleksibilitas konfigurasi T568A atau T568B. Powder-coated steel construction dengan cable management bar dan labeling area untuk organized installation. Supports PoE+ applications hingga 60W per port dengan thermal management. Rear cable management dengan sufficient depth untuk bend radius compliance. Essential untuk structured cabling dan data center applications.",
     specifications: {
       "Ports": "24 port",
       "Category": "Cat6",
@@ -660,7 +660,7 @@ export const PRODUCTS_DB = [
     image: "/products/Protection Sleeve Fiber Optic – Pelindung Sambungan Fiber Optik.jpeg",
     category: "Accessories",
     brand: "Generic",
-    description: "Pelindung sambungan fusion splicing fiber optik. Melindungi dari debu, kelembaban, dan tekanan. Menjaga kualitas transmisi sinyal.",
+    description: "Pelindung sambungan fiber optic untuk splice protection.",
     specifications: {
       "Length": "60mm",
       "Diameter": "3mm",
@@ -681,7 +681,7 @@ export const PRODUCTS_DB = [
     image: "/products/Safety Goggles (Kacamata Pelindung).png",
     category: "Safety",
     brand: "Generic",
-    description: "Melindungi mata dari debu, percikan, atau serpihan. Ideal untuk pekerjaan teknis dan laboratorium. Ringan dan ergonomis.",
+    description: "Kacamata pelindung untuk keselamatan kerja teknisi.",
     specifications: {
       "Material": "Polycarbonate",
       "Protection": "UV protection",
@@ -702,7 +702,7 @@ export const PRODUCTS_DB = [
     image: "/products/Safety Helmet (Helm Pelindung).png",
     category: "Safety",
     brand: "Generic",
-    description: "Pelindung kepala dari benturan dan jatuhan benda. Wajib untuk pekerjaan konstruksi dan instalasi. Nyaman digunakan dalam waktu lama.",
+    description: "Helm pelindung untuk keselamatan kerja di lapangan.",
     specifications: {
       "Material": "ABS",
       "Standard": "SNI 1811:2007",
@@ -723,7 +723,7 @@ export const PRODUCTS_DB = [
     image: "/products/Sarung Tangan Anti Listrik -Fiber.jpeg",
     category: "Safety",
     brand: "Generic",
-    description: "Melindungi tangan dari sengatan listrik dan serpihan fiber. Nyaman digunakan dan anti slip. Cocok untuk teknisi listrik dan optik.",
+    description: "Sarung tangan anti listrik untuk kerja fiber optic dan listrik.",
     specifications: {
       "Material": "Rubber",
       "Voltage": "Up to 1000V",
@@ -744,7 +744,7 @@ export const PRODUCTS_DB = [
     image: "/products/Solder-tenol.jpg",
     category: "Tools",
     brand: "Generic",
-    description: "Alat untuk menyambung komponen elektronik menggunakan timah. Cocok untuk reparasi dan pembuatan rangkaian. Memberikan sambungan kuat dan rapi.",
+    description: "Set solder dan tenol untuk penyolderan komponen elektronik.",
     specifications: {
       "Power": "30W",
       "Temperature": "200-450°C",
@@ -765,7 +765,7 @@ export const PRODUCTS_DB = [
     image: "/products/Spiral Fiber Optic – Pelindung Kabel Fiber Optik.jpeg",
     category: "Accessories",
     brand: "Generic",
-    description: "Pelindung kabel berbentuk spiral untuk mencegah tekukan tajam. Menambah umur kabel dan memudahkan pengaturan jalur kabel. Fleksibel dan tahan lama.",
+    description: "Pelindung spiral untuk kabel fiber optic.",
     specifications: {
       "Material": "Polyethylene",
       "Length": "1m",
@@ -786,7 +786,7 @@ export const PRODUCTS_DB = [
     image: "/products/Stripper.jpg",
     category: "Tools",
     brand: "Generic",
-    description: "Alat untuk mengupas pelindung kabel fiber atau kabel listrik dengan presisi. Membantu pekerjaan rapi tanpa merusak inti kabel. Ringan dan mudah digunakan.",
+    description: "Wire stripper untuk mengupas kabel dengan berbagai ukuran.",
     specifications: {
       "Wire Size": "10-24 AWG",
       "Material": "Carbon steel",
@@ -807,7 +807,7 @@ export const PRODUCTS_DB = [
     image: "/products/Tang potong.jpg",
     category: "Tools",
     brand: "Generic",
-    description: "Digunakan untuk memotong kabel, kawat, atau komponen kecil. Tajam dan tahan lama. Ideal untuk pekerjaan instalasi dan reparasi.",
+    description: "Tang potong untuk memotong kabel dan kawat.",
     specifications: {
       "Material": "Carbon steel",
       "Length": "160mm",
@@ -828,7 +828,7 @@ export const PRODUCTS_DB = [
     image: "/products/Vector Network Analyzer (VNA).jpg",
     category: "Tools",
     brand: "Generic",
-    description: "Alat pengukur kinerja jaringan RF/mikrowave seperti impedansi, S-parameter, dan frekuensi. Digunakan di riset dan industri telekomunikasi. Memberikan hasil akurat untuk analisis perangkat.",
+    description: "Vector network analyzer untuk analisis jaringan RF dan microwave.",
     specifications: {
       "Frequency Range": "10 MHz - 8.5 GHz",
       "Dynamic Range": "130 dB",
