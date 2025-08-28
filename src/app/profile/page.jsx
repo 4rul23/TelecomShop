@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '../../hooks/useAuth';
 import Link from 'next/link';
 import { User, Mail, Phone, MapPin, Calendar, Edit3, Save, X, ArrowLeft, Settings, Shield, Bell, Eye, Lock } from 'lucide-react';
 import ProtectedPage from '../../components/ProtectedPage';
 
 function ProfilePage() {
   const router = useRouter();
+  const { user: authUser, isLoading: authLoading, logout, setLocalAuth } = useAuth();
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('profile'); // Add tab state
@@ -21,34 +23,21 @@ function ProfilePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = () => {
-    try {
-      const savedUser = localStorage.getItem('user');
-      const authToken = localStorage.getItem('authToken');
-
-      if (!savedUser || !authToken) {
-        router.push('/login');
-        return;
-      }
-
-      const parsedUser = JSON.parse(savedUser);
-      setUser(parsedUser);
+    if (!authLoading && authUser) {
+      setUser(authUser);
       setEditForm({
-        name: parsedUser.name || '',
-        email: parsedUser.email || '',
-        phone: parsedUser.phone || '',
-        address: parsedUser.address || '',
-        dateOfBirth: parsedUser.dateOfBirth || ''
+        name: authUser.name || '',
+        email: authUser.email || '',
+        phone: authUser.phone || '',
+        address: authUser.address || '',
+        dateOfBirth: authUser.dateOfBirth || ''
       });
       setLoading(false);
-    } catch (error) {
-      console.error('Error parsing user data:', error);
+    }
+    if (!authLoading && !authUser) {
       router.push('/login');
     }
-  };
+  }, [authLoading, authUser, router]);
 
   const handleEditToggle = () => {
     if (isEditing) {
@@ -78,20 +67,31 @@ function ProfilePage() {
         ...user,
         ...editForm
       };
+      // Update localStorage (legacy) and update auth context
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+        } catch (e) {
+          console.warn('Failed to persist user locally', e);
+        }
+      }
 
-      // Update localStorage
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-
-      // Update registered users if exists
-      const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-      const userIndex = registeredUsers.findIndex(u => u.id === user.id);
-      if (userIndex !== -1) {
-        registeredUsers[userIndex] = { ...registeredUsers[userIndex], ...editForm };
-        localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+      // Update registered users if exists (legacy)
+      try {
+        const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+        const userIndex = registeredUsers.findIndex(u => u.id === user.id);
+        if (userIndex !== -1) {
+          registeredUsers[userIndex] = { ...registeredUsers[userIndex], ...editForm };
+          localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+        }
+      } catch (e) {
+        // ignore
       }
 
       setUser(updatedUser);
       setIsEditing(false);
+      // update auth context for immediate UI consistency
+      try { setLocalAuth(updatedUser); } catch (e) {}
       alert('Profil berhasil diperbarui!');
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -100,8 +100,8 @@ function ProfilePage() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('authToken');
+    // use context logout to clear server session
+    try { logout(); } catch (e) {}
     router.push('/login');
   };
 

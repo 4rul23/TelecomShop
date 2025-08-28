@@ -96,6 +96,20 @@ export function AuthProvider({ children }) {
     }
   };
 
+  // Dev helper: set auth directly (used by admin shortcut in login page)
+  const setLocalAuth = (userObj) => {
+    setUser(userObj);
+    setIsLoggedIn(Boolean(userObj));
+    if (typeof window !== 'undefined') {
+      try {
+        // notify legacy listeners
+        window.dispatchEvent(new Event('authChange'));
+      } catch (e) {
+        console.warn('authChange dispatch failed', e);
+      }
+    }
+  };
+
   const value = {
     isLoggedIn,
     user,
@@ -104,6 +118,7 @@ export function AuthProvider({ children }) {
     login,
     register,
     logout,
+  setLocalAuth,
     checkAuth
   };
 

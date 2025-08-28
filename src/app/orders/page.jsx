@@ -2,42 +2,30 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '../../hooks/useAuth';
 import Link from 'next/link';
 import { Package, Calendar, MapPin, Phone, Mail, ArrowLeft, Eye } from 'lucide-react';
 import ProtectedPage from '../../components/ProtectedPage';
 
 function OrdersPage() {
   const router = useRouter();
+  const { user: authUser, isLoading: authLoading } = useAuth();
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    checkAuth();
-  }, []);
+    if (!authLoading && authUser) {
+      setUser(authUser);
 
-  const checkAuth = () => {
-    try {
-      const savedUser = localStorage.getItem('user');
-      const authToken = localStorage.getItem('authToken');
-
-      if (!savedUser || !authToken) {
-        router.push('/login');
-        return;
-      }
-
-      const parsedUser = JSON.parse(savedUser);
-      setUser(parsedUser);
-
-      // Load orders from localStorage
-      const savedOrders = localStorage.getItem('orders');
-      if (savedOrders) {
-        const allOrders = JSON.parse(savedOrders);
-        // Filter orders for current user (if needed, or show all for demo)
-        setOrders(allOrders);
-      } else {
-        // Generate some demo orders for the user if no orders exist
-        const demoOrders = [
+      // Load orders from localStorage (legacy storage)
+      try {
+        const savedOrders = localStorage.getItem('orders');
+        if (savedOrders) {
+          const allOrders = JSON.parse(savedOrders);
+          setOrders(allOrders);
+        } else {
+          const demoOrders = [
         {
           id: 'ORD-001',
           date: '2024-01-15',
@@ -47,7 +35,7 @@ function OrdersPage() {
             { name: 'RJ45 Connector Cat6', quantity: 100, price: 2500 },
             { name: 'Switch 24 Port Gigabit', quantity: 2, price: 1250000 }
           ],
-          shippingAddress: parsedUser.address || 'Alamat belum diisi'
+          shippingAddress: authUser?.address || 'Alamat belum diisi'
         },
         {
           id: 'ORD-002',
@@ -57,7 +45,7 @@ function OrdersPage() {
           items: [
             { name: 'Access Point WiFi 6', quantity: 1, price: 1850000 }
           ],
-          shippingAddress: parsedUser.address || 'Alamat belum diisi'
+          shippingAddress: authUser?.address || 'Alamat belum diisi'
         },
         {
           id: 'ORD-003',
@@ -67,18 +55,18 @@ function OrdersPage() {
           items: [
             { name: 'Fiber Optic Cable SC-SC 50m', quantity: 1, price: 450000 }
           ],
-          shippingAddress: parsedUser.address || 'Alamat belum diisi'
+          shippingAddress: authUser?.address || 'Alamat belum diisi'
         }
         ];
 
         setOrders(demoOrders);
       }
       setLoading(false);
-    } catch (error) {
-      console.error('Error parsing user data:', error);
+    }
+    if (!authLoading && !authUser) {
       router.push('/login');
     }
-  };
+  }, [authLoading, authUser, router]);
 
   const getStatusColor = (status) => {
     switch (status) {

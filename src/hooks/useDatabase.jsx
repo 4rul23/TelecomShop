@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useAuth } from './useAuth';
+import { useRouter } from 'next/navigation';
 
 
 const safeJsonParse = (str, defaultValue = null) => {
@@ -44,6 +46,10 @@ export const useCart = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
 
+  // Hooks should be called at the top level of the hook (not inside handlers)
+  const auth = useAuth();
+  const router = useRouter();
+
   useEffect(() => {
     setIsClient(true);
     const loadCart = () => {
@@ -58,26 +64,10 @@ export const useCart = () => {
   const addToCart = (product, quantity = 1) => {
     if (!isClient) return;
 
-
-    const userData = localStorage.getItem('user');
-    const authToken = localStorage.getItem('authToken');
-
-    if (!userData || !authToken) {
-
-      if (typeof window !== 'undefined' && window.showAuthToast) {
-        window.showAuthToast('menambahkan produk ke keranjang');
-      } else {
-
-        const shouldRedirect = confirm(
-          `🛒 Anda harus login untuk menambahkan produk ke keranjang\n\nKlik OK untuk pergi ke halaman login, atau Cancel untuk tetap di halaman ini.`
-        );
-        if (shouldRedirect) {
-          const currentUrl = window.location.pathname + window.location.search;
-          localStorage.setItem('redirectAfterLogin', currentUrl);
-          window.location.href = '/login';
-        }
-      }
-      return false;
+    if (!auth.isLoggedIn) {
+      // Use requireAuth to prompt and set redirectAfterLogin
+      const ok = auth.requireAuth('menambahkan produk ke keranjang');
+      if (!ok) return false;
     }
 
     const existingItem = cart.find(item => item.id === product.id);
@@ -96,7 +86,9 @@ export const useCart = () => {
     setCart(newCart);
     safeLocalStorageSet('indri_cart', newCart);
     return newCart;
-  };  const removeFromCart = (productId) => {
+  };
+
+  const removeFromCart = (productId) => {
     if (!isClient) return;
 
     const newCart = cart.filter(item => item.id !== productId);
