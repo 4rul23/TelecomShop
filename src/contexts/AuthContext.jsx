@@ -14,8 +14,13 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     setIsClient(true);
-    checkAuth();
   }, []);
+
+  useEffect(() => {
+    if (isClient) {
+      checkAuth();
+    }
+  }, [isClient]);
 
   const checkAuth = async () => {
     if (!isClient) return;

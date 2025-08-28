@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from './useAuth';
 import { useRouter } from 'next/navigation';
 
@@ -42,29 +42,25 @@ const safeLocalStorageSet = (key, value) => {
 
 // Helper function to make authenticated API calls
 const makeApiCall = async (url, options = {}) => {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
-  
   const defaultHeaders = {
     'Content-Type': 'application/json',
   };
-  
-  if (token) {
-    defaultHeaders.Authorization = `Bearer ${token}`;
-  }
-  
+
+  // No need to manually add auth headers - cookies are sent automatically
   const response = await fetch(url, {
     ...options,
+    credentials: 'include', // Ensure cookies are sent with the request
     headers: {
       ...defaultHeaders,
       ...options.headers,
     },
   });
-  
+
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({ error: 'Network error' }));
     throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
   }
-  
+
   return response.json();
 };
 
@@ -74,28 +70,34 @@ export const useCart = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
   const [error, setError] = useState(null);
+  const hasLoadedRef = useRef(false);
+  const loadingRef = useRef(false);
+  const authStateRef = useRef(null);
 
   // Hooks should be called at the top level of the hook (not inside handlers)
   const auth = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    setIsClient(true);
-    loadCart();
-  }, [auth.isLoggedIn]);
-
-  const loadCart = async () => {
-    if (!auth.isLoggedIn) {
-      // If not logged in, try to load from localStorage as fallback
-      const cartData = safeLocalStorageGet('indri_cart', []);
-      setCart(cartData);
-      setIsLoading(false);
+  const loadCart = useCallback(async () => {
+    // Prevent multiple simultaneous requests
+    if (loadingRef.current) {
+      console.log('Cart loading already in progress, skipping...');
       return;
     }
 
+    loadingRef.current = true;
+    setIsLoading(true);
+    setError(null);
+
     try {
-      setIsLoading(true);
-      setError(null);
+      if (!auth.isLoggedIn) {
+        // If not logged in, load from localStorage as fallback
+        const cartData = safeLocalStorageGet('indri_cart', []);
+        setCart(cartData);
+        return;
+      }
+
+      // Make API call to get cart
       const response = await makeApiCall('/api/cart');
       if (response.success) {
         setCart(response.data || []);
@@ -109,9 +111,46 @@ export const useCart = () => {
       const cartData = safeLocalStorageGet('indri_cart', []);
       setCart(cartData);
     } finally {
+      loadingRef.current = false;
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  // Initialize client-side state
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Handle cart loading - both initial load and auth state changes
+  useEffect(() => {
+    // Don't do anything if still on server side or auth is loading
+    if (!isClient || auth.loading) {
+      return;
+    }
+
+    // Check if auth state has actually changed
+    const currentAuthState = auth.isLoggedIn;
+    const hasAuthStateChanged = authStateRef.current !== null && authStateRef.current !== currentAuthState;
+
+    // Load cart if:
+    // 1. First time loading (hasLoadedRef.current is false)
+    // 2. Auth state has changed (login/logout)
+    if (!hasLoadedRef.current || hasAuthStateChanged) {
+      console.log('Loading cart:', {
+        firstLoad: !hasLoadedRef.current,
+        authChanged: hasAuthStateChanged,
+        wasLoggedIn: authStateRef.current,
+        nowLoggedIn: currentAuthState
+      });
+
+      hasLoadedRef.current = true;
+      authStateRef.current = currentAuthState;
+      loadCart();
+    } else {
+      // Just update the auth state ref if no action needed
+      authStateRef.current = currentAuthState;
+    }
+  }, [isClient, auth.loading, auth.isLoggedIn]);
 
   const addToCart = async (product, quantity = 1) => {
     if (!isClient) return;
@@ -133,8 +172,10 @@ export const useCart = () => {
       });
 
       if (response.success) {
-        // Reload cart to get updated data
-        await loadCart();
+        // Update cart state directly instead of reloading to avoid loops
+        if (response.data) {
+          setCart(response.data);
+        }
         return true;
       } else {
         throw new Error(response.error || 'Failed to add to cart');
@@ -142,7 +183,7 @@ export const useCart = () => {
     } catch (error) {
       console.error('Error adding to cart:', error);
       setError(error.message);
-      
+
       // Fallback to localStorage for offline functionality
       const existingItem = cart.find(item => item.id === product.id);
       let newCart;
@@ -173,8 +214,10 @@ export const useCart = () => {
       });
 
       if (response.success) {
-        // Reload cart to get updated data
-        await loadCart();
+        // Update cart state directly instead of reloading to avoid loops
+        if (response.data) {
+          setCart(response.data);
+        }
         return true;
       } else {
         throw new Error(response.error || 'Failed to remove from cart');
@@ -182,7 +225,7 @@ export const useCart = () => {
     } catch (error) {
       console.error('Error removing from cart:', error);
       setError(error.message);
-      
+
       // Fallback to localStorage
       const newCart = cart.filter(item => item.id !== productId);
       setCart(newCart);
@@ -209,8 +252,10 @@ export const useCart = () => {
       });
 
       if (response.success) {
-        // Reload cart to get updated data
-        await loadCart();
+        // Update cart state directly instead of reloading to avoid loops
+        if (response.data) {
+          setCart(response.data);
+        }
         return true;
       } else {
         throw new Error(response.error || 'Failed to update quantity');
@@ -218,7 +263,7 @@ export const useCart = () => {
     } catch (error) {
       console.error('Error updating quantity:', error);
       setError(error.message);
-      
+
       // Fallback to localStorage
       const newCart = cart.map(item =>
         item.id === productId ? { ...item, quantity } : item
@@ -248,7 +293,7 @@ export const useCart = () => {
     } catch (error) {
       console.error('Error clearing cart:', error);
       setError(error.message);
-      
+
       // Fallback to localStorage
       setCart([]);
       safeLocalStorageSet('indri_cart', []);
@@ -347,7 +392,7 @@ export const useOrders = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
   const [error, setError] = useState(null);
-  
+
   const auth = useAuth();
 
   useEffect(() => {
@@ -404,7 +449,7 @@ export const useOrders = () => {
     } catch (error) {
       console.error('Error creating order:', error);
       setError(error.message);
-      
+
       // Fallback to localStorage
       const newOrder = {
         id: Date.now(),
@@ -431,7 +476,7 @@ export const useOrders = () => {
     } catch (error) {
       console.error('Error updating order status:', error);
       setError(error.message);
-      
+
       // Fallback to localStorage
       const newOrders = orders.map(order =>
         order.id === orderId

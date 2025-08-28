@@ -1,28 +1,73 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '../../../../lib/prismaClient';
+import fs from 'fs';
+import path from 'path';
+import os from 'os';
 
-// Helper function to get user from session token
-async function getUserFromToken(request) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return null;
-  }
+// File paths for fallback auth
+const CURRENT_USER_FILE = path.join(process.cwd(), 'src/data/currentUser.json');
+const TMP_CURRENT_USER_FILE = path.join(os.tmpdir(), 'telecom_current_user.json');
 
-  const token = authHeader.replace('Bearer ', '');
-  
+// In-memory fallback
+let memoryCurrentUser = null;
+
+// Helper function to read current user from file (fallback auth)
+function readCurrentUser() {
   try {
-    const session = await prisma.session.findUnique({
-      where: { token },
-      include: { user: true }
-    });
-
-    if (!session || (session.expiresAt && session.expiresAt < new Date())) {
-      return null;
+    if (fs.existsSync(CURRENT_USER_FILE)) {
+      const data = fs.readFileSync(CURRENT_USER_FILE, 'utf8');
+      return JSON.parse(data);
     }
 
-    return session.user;
+    if (fs.existsSync(TMP_CURRENT_USER_FILE)) {
+      const data = fs.readFileSync(TMP_CURRENT_USER_FILE, 'utf8');
+      return JSON.parse(data);
+    }
+
+    return memoryCurrentUser;
   } catch (error) {
-    console.error('Error validating token:', error);
+    console.error('Error reading current user file:', error);
+    return null;
+  }
+}
+
+// Helper function to get user from session cookie (compatible with existing auth system)
+async function getUserFromRequest(request) {
+  try {
+    // First, try database session authentication
+    const token = request.cookies.get('session_token')?.value;
+
+    if (token && prisma) {
+      const session = await prisma.session.findUnique({
+        where: { token },
+        include: { user: true }
+      });
+
+      if (session && (!session.expiresAt || session.expiresAt > new Date())) {
+        return session.user;
+      }
+    }
+
+    // Fallback to file-based auth (for existing logged-in users)
+    const currentUser = readCurrentUser();
+    if (currentUser && currentUser.id) {
+      // If we have a file-based user, try to find them in the database
+      if (prisma) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: currentUser.id }
+        });
+        if (dbUser) {
+          return dbUser;
+        }
+      }
+
+      // Return file-based user as fallback
+      return currentUser;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Error validating session:', error);
     return null;
   }
 }
@@ -30,8 +75,8 @@ async function getUserFromToken(request) {
 // GET /api/cart - Get user's cart items
 export async function GET(request) {
   try {
-    const user = await getUserFromToken(request);
-    
+    const user = await getUserFromRequest(request);
+
     if (!user) {
       return NextResponse.json(
         { success: false, error: 'Authentication required' },
@@ -88,8 +133,8 @@ export async function GET(request) {
 // POST /api/cart - Add item to cart
 export async function POST(request) {
   try {
-    const user = await getUserFromToken(request);
-    
+    const user = await getUserFromRequest(request);
+
     if (!user) {
       return NextResponse.json(
         { success: false, error: 'Authentication required' },
@@ -141,7 +186,7 @@ export async function POST(request) {
     if (existingCartItem) {
       // Update quantity if item already exists
       const newQuantity = existingCartItem.quantity + quantity;
-      
+
       if (product.stock < newQuantity) {
         return NextResponse.json(
           { success: false, error: 'Insufficient stock for requested quantity' },
@@ -188,24 +233,42 @@ export async function POST(request) {
       });
     }
 
-    // Format response
-    const formattedCartItem = {
-      id: cartItem.product.id,
-      name: cartItem.product.name,
-      slug: cartItem.product.slug,
-      price: cartItem.product.price,
-      originalPrice: cartItem.product.originalPrice,
-      image: cartItem.product.image,
-      brand: cartItem.product.brand,
-      category: cartItem.product.category.name,
-      stock: cartItem.product.stock,
-      quantity: cartItem.quantity,
-      cartItemId: cartItem.id
-    };
+    // Get updated cart after adding item
+    const cartItems = await prisma.cartItem.findMany({
+      where: { userId: user.id },
+      include: {
+        product: {
+          include: {
+            category: {
+              select: {
+                name: true,
+                slug: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    // Format cart items for frontend compatibility
+    const formattedCartItems = cartItems.map(item => ({
+      id: item.product.id,
+      name: item.product.name,
+      slug: item.product.slug,
+      price: item.product.price,
+      originalPrice: item.product.originalPrice,
+      image: item.product.image,
+      brand: item.product.brand,
+      category: item.product.category.name,
+      stock: item.product.stock,
+      quantity: item.quantity,
+      cartItemId: item.id
+    }));
 
     return NextResponse.json({
       success: true,
-      data: formattedCartItem,
+      data: formattedCartItems,
       message: 'Item added to cart successfully'
     });
 
@@ -221,8 +284,8 @@ export async function POST(request) {
 // PUT /api/cart - Update cart item quantity
 export async function PUT(request) {
   try {
-    const user = await getUserFromToken(request);
-    
+    const user = await getUserFromRequest(request);
+
     if (!user) {
       return NextResponse.json(
         { success: false, error: 'Authentication required' },
@@ -271,8 +334,42 @@ export async function PUT(request) {
         where: { id: cartItem.id }
       });
 
+      // Get updated cart after removing item
+      const cartItems = await prisma.cartItem.findMany({
+        where: { userId: user.id },
+        include: {
+          product: {
+            include: {
+              category: {
+                select: {
+                  name: true,
+                  slug: true
+                }
+              }
+            }
+          }
+        },
+        orderBy: { createdAt: 'desc' }
+      });
+
+      // Format cart items for frontend compatibility
+      const formattedCartItems = cartItems.map(item => ({
+        id: item.product.id,
+        name: item.product.name,
+        slug: item.product.slug,
+        price: item.product.price,
+        originalPrice: item.product.originalPrice,
+        image: item.product.image,
+        brand: item.product.brand,
+        category: item.product.category.name,
+        stock: item.product.stock,
+        quantity: item.quantity,
+        cartItemId: item.id
+      }));
+
       return NextResponse.json({
         success: true,
+        data: formattedCartItems,
         message: 'Item removed from cart'
       });
     }
@@ -303,24 +400,42 @@ export async function PUT(request) {
       }
     });
 
-    // Format response
-    const formattedCartItem = {
-      id: updatedCartItem.product.id,
-      name: updatedCartItem.product.name,
-      slug: updatedCartItem.product.slug,
-      price: updatedCartItem.product.price,
-      originalPrice: updatedCartItem.product.originalPrice,
-      image: updatedCartItem.product.image,
-      brand: updatedCartItem.product.brand,
-      category: updatedCartItem.product.category.name,
-      stock: updatedCartItem.product.stock,
-      quantity: updatedCartItem.quantity,
-      cartItemId: updatedCartItem.id
-    };
+    // Get updated cart after updating quantity
+    const cartItems = await prisma.cartItem.findMany({
+      where: { userId: user.id },
+      include: {
+        product: {
+          include: {
+            category: {
+              select: {
+                name: true,
+                slug: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    // Format cart items for frontend compatibility
+    const formattedCartItems = cartItems.map(item => ({
+      id: item.product.id,
+      name: item.product.name,
+      slug: item.product.slug,
+      price: item.product.price,
+      originalPrice: item.product.originalPrice,
+      image: item.product.image,
+      brand: item.product.brand,
+      category: item.product.category.name,
+      stock: item.product.stock,
+      quantity: item.quantity,
+      cartItemId: item.id
+    }));
 
     return NextResponse.json({
       success: true,
-      data: formattedCartItem,
+      data: formattedCartItems,
       message: 'Cart updated successfully'
     });
 
@@ -336,8 +451,8 @@ export async function PUT(request) {
 // DELETE /api/cart - Remove item from cart or clear entire cart
 export async function DELETE(request) {
   try {
-    const user = await getUserFromToken(request);
-    
+    const user = await getUserFromRequest(request);
+
     if (!user) {
       return NextResponse.json(
         { success: false, error: 'Authentication required' },
@@ -357,6 +472,7 @@ export async function DELETE(request) {
 
       return NextResponse.json({
         success: true,
+        data: [],
         message: 'Cart cleared successfully'
       });
     }
@@ -389,8 +505,42 @@ export async function DELETE(request) {
       where: { id: cartItem.id }
     });
 
+    // Get updated cart after removing item
+    const cartItems = await prisma.cartItem.findMany({
+      where: { userId: user.id },
+      include: {
+        product: {
+          include: {
+            category: {
+              select: {
+                name: true,
+                slug: true
+              }
+            }
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    // Format cart items for frontend compatibility
+    const formattedCartItems = cartItems.map(item => ({
+      id: item.product.id,
+      name: item.product.name,
+      slug: item.product.slug,
+      price: item.product.price,
+      originalPrice: item.product.originalPrice,
+      image: item.product.image,
+      brand: item.product.brand,
+      category: item.product.category.name,
+      stock: item.product.stock,
+      quantity: item.quantity,
+      cartItemId: item.id
+    }));
+
     return NextResponse.json({
       success: true,
+      data: formattedCartItems,
       message: 'Item removed from cart successfully'
     });
 

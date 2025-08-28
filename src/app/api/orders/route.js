@@ -1,28 +1,32 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '../../../../lib/prismaClient';
 
-// Helper function to get user from session token
-async function getUserFromToken(request) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return null;
-  }
-
-  const token = authHeader.replace('Bearer ', '');
-  
+// Helper function to get user from session cookie (compatible with existing auth system)
+async function getUserFromRequest(request) {
   try {
-    const session = await prisma.session.findUnique({
-      where: { token },
-      include: { user: true }
-    });
+    const token = request.cookies.get('session_token')?.value;
 
-    if (!session || (session.expiresAt && session.expiresAt < new Date())) {
+    if (!token) {
       return null;
     }
 
-    return session.user;
+    if (prisma) {
+      const session = await prisma.session.findUnique({
+        where: { token },
+        include: { user: true }
+      });
+
+      if (!session || (session.expiresAt && session.expiresAt < new Date())) {
+        return null;
+      }
+
+      return session.user;
+    }
+
+    // Fallback for file-based auth
+    return null;
   } catch (error) {
-    console.error('Error validating token:', error);
+    console.error('Error validating session:', error);
     return null;
   }
 }
@@ -30,8 +34,8 @@ async function getUserFromToken(request) {
 // GET /api/orders - Get user's orders
 export async function GET(request) {
   try {
-    const user = await getUserFromToken(request);
-    
+    const user = await getUserFromRequest(request);
+
     if (!user) {
       return NextResponse.json(
         { success: false, error: 'Authentication required' },
@@ -95,8 +99,8 @@ export async function GET(request) {
 // POST /api/orders - Create new order from cart
 export async function POST(request) {
   try {
-    const user = await getUserFromToken(request);
-    
+    const user = await getUserFromRequest(request);
+
     if (!user) {
       return NextResponse.json(
         { success: false, error: 'Authentication required' },
@@ -131,9 +135,9 @@ export async function POST(request) {
     for (const cartItem of cartItems) {
       if (cartItem.product.stock < cartItem.quantity) {
         return NextResponse.json(
-          { 
-            success: false, 
-            error: `Insufficient stock for ${cartItem.product.name}. Available: ${cartItem.product.stock}, Required: ${cartItem.quantity}` 
+          {
+            success: false,
+            error: `Insufficient stock for ${cartItem.product.name}. Available: ${cartItem.product.stock}, Required: ${cartItem.quantity}`
           },
           { status: 400 }
         );
@@ -249,6 +253,6 @@ function getStatusLabel(status) {
     'delivered': 'Delivered',
     'cancelled': 'Cancelled'
   };
-  
+
   return statusMap[status] || status;
 }

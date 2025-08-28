@@ -8,12 +8,12 @@ async function seedDatabase() {
     // First, create categories
     console.log('📦 Creating categories...');
     const categoryMap = new Map();
-    
+
     for (const categoryName of CATEGORIES) {
       const slug = categoryName.toLowerCase()
         .replace(/\s+/g, '-')
         .replace(/[^\w\-]+/g, '');
-        
+
       const category = await prisma.category.upsert({
         where: { slug },
         update: { name: categoryName },
@@ -22,7 +22,7 @@ async function seedDatabase() {
           slug
         }
       });
-      
+
       categoryMap.set(categoryName, category.id);
       console.log(`✅ Created/Updated category: ${categoryName} (${slug})`);
     }
@@ -35,7 +35,7 @@ async function seedDatabase() {
     for (const product of PRODUCTS_DB) {
       try {
         const categoryId = categoryMap.get(product.category);
-        
+
         if (!categoryId) {
           console.warn(`⚠️ Category not found for product: ${product.name} (${product.category})`);
           continue;
@@ -86,7 +86,7 @@ async function seedDatabase() {
 
         console.log(`✅ Created/Updated product: ${product.name} (ID: ${createdProduct.id})`);
         successCount++;
-        
+
       } catch (error) {
         console.error(`❌ Error creating product ${product.name}:`, error.message);
         errorCount++;
@@ -103,7 +103,7 @@ async function seedDatabase() {
     // Display some statistics
     const totalProducts = await prisma.product.count();
     const totalCategories = await prisma.category.count();
-    
+
     console.log(`\n📈 Current database stats:`);
     console.log(`   - Total categories in DB: ${totalCategories}`);
     console.log(`   - Total products in DB: ${totalProducts}`);

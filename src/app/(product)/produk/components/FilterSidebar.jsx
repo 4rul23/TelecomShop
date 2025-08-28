@@ -7,7 +7,16 @@ import {
   DollarSign,
   CheckCircle2
 } from 'lucide-react';
-import { PRICE_RANGES } from '../../../../data/products';
+
+// Default price ranges fallback
+const DEFAULT_PRICE_RANGES = [
+  { label: "Semua", min: 0, max: Infinity },
+  { label: "Di bawah 50rb", min: 0, max: 50000 },
+  { label: "50rb - 200rb", min: 50000, max: 200000 },
+  { label: "200rb - 500rb", min: 200000, max: 500000 },
+  { label: "500rb - 1jt", min: 500000, max: 1000000 },
+  { label: "Di atas 1jt", min: 1000000, max: Infinity }
+];
 
 // Stock options constant
 const STOCK_OPTIONS = [
@@ -31,6 +40,7 @@ export default function FilterSidebar({
   setCurrentPage,
   resetFilters,
   activeFiltersCount,
+  priceRanges = DEFAULT_PRICE_RANGES, // Add priceRanges prop with fallback
   id = 'default' // Add unique identifier
 }) {
   return (
@@ -101,7 +111,7 @@ export default function FilterSidebar({
           Rentang Harga
         </h4>
         <div className="space-y-3">
-          {PRICE_RANGES.map((range) => (
+          {priceRanges.map((range) => (
             <div key={`${id}-price-${range.label}`} className="flex items-center">
               <input
                 type="radio"
