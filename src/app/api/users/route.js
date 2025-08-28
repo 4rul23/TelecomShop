@@ -8,7 +8,6 @@ let prisma = null;
 if (process.env.DATABASE_URL) {
   try {
     // lazy import to avoid requiring prisma in environments where it's not installed
-    // eslint-disable-next-line node/no-extraneous-import
     const { PrismaClient } = await import('@prisma/client');
     prisma = new PrismaClient();
   } catch (e) {
