@@ -15,7 +15,7 @@ import { useCart } from '../../hooks/useDatabase';
 import ProtectedPage from '../../components/ProtectedPage';
 
 function CartPage() {
-  const { cart, updateQuantity, removeFromCart, clearCart, getTotal, getItemCount, isLoading, isClient } = useCart();
+  const { cart, updateQuantity, removeFromCart, clearCart, getTotal, getItemCount, isLoading, isClient, error, refreshCart } = useCart();
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('id-ID', {
@@ -25,21 +25,27 @@ function CartPage() {
     }).format(price);
   };
 
-  const handleQuantityChange = (productId, newQuantity) => {
+  const handleQuantityChange = async (productId, newQuantity) => {
     if (newQuantity < 1) {
-      removeFromCart(productId);
+      await removeFromCart(productId);
     } else {
-      updateQuantity(productId, newQuantity);
+      await updateQuantity(productId, newQuantity);
     }
   };
 
-  const handleRemoveItem = (productId) => {
-    removeFromCart(productId);
+  const handleRemoveItem = async (productId) => {
+    await removeFromCart(productId);
   };
 
-  const handleClearCart = () => {
+  const handleClearCart = async () => {
     if (window.confirm('Apakah Anda yakin ingin mengosongkan keranjang?')) {
-      clearCart();
+      await clearCart();
+    }
+  };
+
+  const handleRefreshCart = async () => {
+    if (refreshCart) {
+      await refreshCart();
     }
   };
 
@@ -68,6 +74,17 @@ function CartPage() {
               <p className="text-gray-600 mt-1">
                 {getItemCount()} item{getItemCount() !== 1 ? 's' : ''} di keranjang Anda
               </p>
+              {error && (
+                <div className="mt-2 flex items-center space-x-2">
+                  <p className="text-red-600 text-sm">{error}</p>
+                  <button
+                    onClick={handleRefreshCart}
+                    className="text-red-600 hover:text-red-700 text-sm underline"
+                  >
+                    Coba lagi
+                  </button>
+                </div>
+              )}
             </div>
 
             <Link

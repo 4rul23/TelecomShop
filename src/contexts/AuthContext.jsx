@@ -38,6 +38,16 @@ export function AuthProvider({ children }) {
       if (result.success) {
         setUser(result.user);
         setIsLoggedIn(true);
+        // Notify any legacy listeners (or components listening for authChange)
+        if (typeof window !== 'undefined') {
+          try {
+            window.dispatchEvent(new Event('authChange'));
+          } catch (e) {
+            console.warn('authChange dispatch failed', e);
+          }
+        }
+        // session persistence is handled by an HttpOnly cookie + server-side session
+        // do not write raw user/auth tokens to localStorage for security
         return { success: true, user: result.user };
       } else {
         return { success: false, error: result.error };
@@ -67,11 +77,36 @@ export function AuthProvider({ children }) {
       await fileDB.logoutUser();
       setUser(null);
       setIsLoggedIn(false);
+      if (typeof window !== 'undefined') {
+        try {
+          // Do not remove server session user here; cookie/session is cleared server-side.
+          // Keep client-side storage for cart/favorites only.
+          localStorage.removeItem('indri_cart');
+          localStorage.removeItem('indri_favorites');
+          window.dispatchEvent(new Event('authChange'));
+        } catch (e) {
+          console.warn('Failed to clear localStorage on logout', e);
+        }
+      }
     } catch (error) {
       console.error('Error logging out:', error);
       // Still clear local state even if API call fails
       setUser(null);
       setIsLoggedIn(false);
+    }
+  };
+
+  // Dev helper: set auth directly (used by admin shortcut in login page)
+  const setLocalAuth = (userObj) => {
+    setUser(userObj);
+    setIsLoggedIn(Boolean(userObj));
+    if (typeof window !== 'undefined') {
+      try {
+        // notify legacy listeners
+        window.dispatchEvent(new Event('authChange'));
+      } catch (e) {
+        console.warn('authChange dispatch failed', e);
+      }
     }
   };
 
@@ -83,6 +118,7 @@ export function AuthProvider({ children }) {
     login,
     register,
     logout,
+  setLocalAuth,
     checkAuth
   };
 

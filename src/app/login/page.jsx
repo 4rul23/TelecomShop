@@ -17,7 +17,7 @@ export default function LoginPage() {
 
 function LoginContent() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, setLocalAuth } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -83,14 +83,10 @@ function LoginContent() {
           isAdmin: true
         };
 
-        localStorage.setItem('user', JSON.stringify(adminData));
-        localStorage.setItem('authToken', `admin_token_${Date.now()}`);
+        // Use context dev helper to set auth state (no localStorage)
+        setLocalAuth(adminData);
 
         console.log('Admin login successful');
-
-
-        window.dispatchEvent(new Event('authChange'));
-
 
         setTimeout(() => {
           router.push('/admin');
@@ -105,9 +101,16 @@ function LoginContent() {
       if (result.success) {
         console.log('Login successful:', result.user);
 
-        // Redirect after successful login
-        const redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
-        localStorage.removeItem('redirectAfterLogin');
+        // Redirect after successful login (fallback to '/')
+        let redirectPath = '/';
+        if (typeof window !== 'undefined') {
+          try {
+            redirectPath = localStorage.getItem('redirectAfterLogin') || '/';
+            localStorage.removeItem('redirectAfterLogin');
+          } catch (e) {
+            // ignore
+          }
+        }
 
         setTimeout(() => {
           router.push(redirectPath);

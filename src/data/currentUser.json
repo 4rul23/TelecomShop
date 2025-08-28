@@ -1,7 +1,17 @@
 {
+<<<<<<< HEAD
   "id": "user_1756344620751_4kgbl5",
   "name": "Test",
   "email": "test@gmail.com",
   "phone": "pim@admin.com",
   "createdAt": "2025-08-28T01:30:20.751Z"
+=======
+  "id": 4,
+  "name": "test",
+  "email": "ar2@gmail.com",
+  "phone": "85656666614",
+  "address": null,
+  "dateRegistered": "2025-08-28T02:38:49.472Z",
+  "role": "customer"
+>>>>>>> 013e633507bacec0d54936f87260e8a9c1ace11e
 }

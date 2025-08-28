@@ -2,14 +2,25 @@
   "name": "indri",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "npx prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate:kv": "node scripts/migrate-users-to-kv.js",
+    "migrate:neon": "node scripts/migrate-to-neon.js",
+    "migrate:products": "node scripts/migrate-products-to-prisma.js",
+    "db:seed": "node scripts/migrate-products-to-prisma.js",
+    "db:push": "npx prisma db push",
+    "db:studio": "npx prisma studio",
+    "test:e2e": "node scripts/test-auth-e2e.js"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@prisma/client": "^6.15.0",
+    "@vercel/kv": "^3.0.0",
+    "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.9",
     "lucide-react": "^0.525.0",
@@ -20,8 +31,12 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "dotenv": "^16.1.4",
     "eslint": "^9",
     "eslint-config-next": "15.4.4",
+    "eslint-plugin-node": "^11.1.0",
+    "prisma": "^6.15.0",
     "tailwindcss": "^4"
-  }
+  },
+  "postinstall": "npx prisma generate"
 }

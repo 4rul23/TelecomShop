@@ -113,54 +113,7 @@ function RegisterContent() {
           setErrors({ general: result.error });
         }
       }
-
-
-      const newUser = {
-        id: `user_${Date.now()}_${Math.random()}`,
-        name: formData.name.trim(),
-        email: formData.email,
-        password: formData.password,
-        phone: formData.phone || '',
-        address: '',
-        dateOfBirth: '',
-        createdAt: new Date().toISOString()
-      };
-
-
-      const updatedUsers = [...existingUsers, newUser];
-      localStorage.setItem('registeredUsers', JSON.stringify(updatedUsers));
-
-
-      const authToken = `token_${Date.now()}_${Math.random()}`;
-      const userData = {
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email,
-        phone: newUser.phone,
-        address: newUser.address,
-        dateOfBirth: newUser.dateOfBirth
-      };
-
-      localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('authToken', authToken);
-
-
-      const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-      const userIndex = registeredUsers.findIndex(u => u.id === newUser.id);
-      if (userIndex !== -1) {
-        registeredUsers[userIndex] = { ...registeredUsers[userIndex], ...userData };
-        localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-      }
-
-      console.log('Registration successful, user data saved:', userData);
-
-
-      window.dispatchEvent(new Event('authChange'));
-
-
-      setTimeout(() => {
-        router.push('/');
-      }, 100);
+  // registration handled by API and AuthContext; no local existingUsers variable needed
 
     } catch (error) {
       console.error('Registration error:', error);

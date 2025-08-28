@@ -21,6 +21,7 @@
   },
   {
     "id": 3,
+<<<<<<< HEAD
     "name": "testt",
     "email": "pim@admin.com",
     "password": "pimjaya",
@@ -36,5 +37,24 @@
     "phone": "pim@admin.com",
     "password": "pimjaya",
     "createdAt": "2025-08-28T01:30:20.751Z"
+=======
+    "name": "arul gu",
+    "email": "test@gmail.com",
+    "password": "pimjaya",
+    "phone": "12312312",
+    "address": "",
+    "dateRegistered": "2025-08-28T01:54:20.362Z",
+    "role": "customer"
+  },
+  {
+    "id": 4,
+    "name": "test",
+    "email": "ar2@gmail.com",
+    "password": "pimjaya",
+    "phone": "85656666614",
+    "address": "",
+    "dateRegistered": "2025-08-28T01:56:30.819Z",
+    "role": "customer"
+>>>>>>> 013e633507bacec0d54936f87260e8a9c1ace11e
   }
 ]

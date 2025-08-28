@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useAuth } from './useAuth';
+import { useRouter } from 'next/navigation';
 
 
 const safeJsonParse = (str, defaultValue = null) => {
@@ -38,94 +40,219 @@ const safeLocalStorageSet = (key, value) => {
   }
 };
 
+// Helper function to make authenticated API calls
+const makeApiCall = async (url, options = {}) => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
+  
+  const defaultHeaders = {
+    'Content-Type': 'application/json',
+  };
+  
+  if (token) {
+    defaultHeaders.Authorization = `Bearer ${token}`;
+  }
+  
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      ...defaultHeaders,
+      ...options.headers,
+    },
+  });
+  
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({ error: 'Network error' }));
+    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+  }
+  
+  return response.json();
+};
+
 
 export const useCart = () => {
   const [cart, setCart] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
+  const [error, setError] = useState(null);
+
+  // Hooks should be called at the top level of the hook (not inside handlers)
+  const auth = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     setIsClient(true);
-    const loadCart = () => {
+    loadCart();
+  }, [auth.isLoggedIn]);
+
+  const loadCart = async () => {
+    if (!auth.isLoggedIn) {
+      // If not logged in, try to load from localStorage as fallback
       const cartData = safeLocalStorageGet('indri_cart', []);
       setCart(cartData);
       setIsLoading(false);
-    };
+      return;
+    }
 
-    loadCart();
-  }, []);
-
-  const addToCart = (product, quantity = 1) => {
-    if (!isClient) return;
-
-
-    const userData = localStorage.getItem('user');
-    const authToken = localStorage.getItem('authToken');
-
-    if (!userData || !authToken) {
-
-      if (typeof window !== 'undefined' && window.showAuthToast) {
-        window.showAuthToast('menambahkan produk ke keranjang');
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await makeApiCall('/api/cart');
+      if (response.success) {
+        setCart(response.data || []);
       } else {
-
-        const shouldRedirect = confirm(
-          `🛒 Anda harus login untuk menambahkan produk ke keranjang\n\nKlik OK untuk pergi ke halaman login, atau Cancel untuk tetap di halaman ini.`
-        );
-        if (shouldRedirect) {
-          const currentUrl = window.location.pathname + window.location.search;
-          localStorage.setItem('redirectAfterLogin', currentUrl);
-          window.location.href = '/login';
-        }
+        throw new Error(response.error || 'Failed to load cart');
       }
-      return false;
+    } catch (error) {
+      console.error('Error loading cart:', error);
+      setError(error.message);
+      // Fallback to localStorage
+      const cartData = safeLocalStorageGet('indri_cart', []);
+      setCart(cartData);
+    } finally {
+      setIsLoading(false);
     }
-
-    const existingItem = cart.find(item => item.id === product.id);
-    let newCart;
-
-    if (existingItem) {
-      newCart = cart.map(item =>
-        item.id === product.id
-          ? { ...item, quantity: item.quantity + quantity }
-          : item
-      );
-    } else {
-      newCart = [...cart, { ...product, quantity }];
-    }
-
-    setCart(newCart);
-    safeLocalStorageSet('indri_cart', newCart);
-    return newCart;
-  };  const removeFromCart = (productId) => {
-    if (!isClient) return;
-
-    const newCart = cart.filter(item => item.id !== productId);
-    setCart(newCart);
-    safeLocalStorageSet('indri_cart', newCart);
-    return newCart;
   };
 
-  const updateQuantity = (productId, quantity) => {
+  const addToCart = async (product, quantity = 1) => {
+    if (!isClient) return;
+
+    if (!auth.isLoggedIn) {
+      // Use requireAuth to prompt and set redirectAfterLogin
+      const ok = auth.requireAuth('menambahkan produk ke keranjang');
+      if (!ok) return false;
+    }
+
+    try {
+      setError(null);
+      const response = await makeApiCall('/api/cart', {
+        method: 'POST',
+        body: JSON.stringify({
+          productId: product.id,
+          quantity
+        })
+      });
+
+      if (response.success) {
+        // Reload cart to get updated data
+        await loadCart();
+        return true;
+      } else {
+        throw new Error(response.error || 'Failed to add to cart');
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      setError(error.message);
+      
+      // Fallback to localStorage for offline functionality
+      const existingItem = cart.find(item => item.id === product.id);
+      let newCart;
+
+      if (existingItem) {
+        newCart = cart.map(item =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
+        );
+      } else {
+        newCart = [...cart, { ...product, quantity }];
+      }
+
+      setCart(newCart);
+      safeLocalStorageSet('indri_cart', newCart);
+      return newCart;
+    }
+  };
+
+  const removeFromCart = async (productId) => {
+    if (!isClient) return;
+
+    try {
+      setError(null);
+      const response = await makeApiCall(`/api/cart?productId=${productId}`, {
+        method: 'DELETE'
+      });
+
+      if (response.success) {
+        // Reload cart to get updated data
+        await loadCart();
+        return true;
+      } else {
+        throw new Error(response.error || 'Failed to remove from cart');
+      }
+    } catch (error) {
+      console.error('Error removing from cart:', error);
+      setError(error.message);
+      
+      // Fallback to localStorage
+      const newCart = cart.filter(item => item.id !== productId);
+      setCart(newCart);
+      safeLocalStorageSet('indri_cart', newCart);
+      return newCart;
+    }
+  };
+
+  const updateQuantity = async (productId, quantity) => {
     if (!isClient) return;
 
     if (quantity <= 0) {
       return removeFromCart(productId);
     }
 
-    const newCart = cart.map(item =>
-      item.id === productId ? { ...item, quantity } : item
-    );
+    try {
+      setError(null);
+      const response = await makeApiCall('/api/cart', {
+        method: 'PUT',
+        body: JSON.stringify({
+          productId,
+          quantity
+        })
+      });
 
-    setCart(newCart);
-    safeLocalStorageSet('indri_cart', newCart);
-    return newCart;
+      if (response.success) {
+        // Reload cart to get updated data
+        await loadCart();
+        return true;
+      } else {
+        throw new Error(response.error || 'Failed to update quantity');
+      }
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+      setError(error.message);
+      
+      // Fallback to localStorage
+      const newCart = cart.map(item =>
+        item.id === productId ? { ...item, quantity } : item
+      );
+
+      setCart(newCart);
+      safeLocalStorageSet('indri_cart', newCart);
+      return newCart;
+    }
   };
 
-  const clearCart = () => {
+  const clearCart = async () => {
     if (!isClient) return;
 
-    setCart([]);
-    safeLocalStorageSet('indri_cart', []);
+    try {
+      setError(null);
+      const response = await makeApiCall('/api/cart?clearAll=true', {
+        method: 'DELETE'
+      });
+
+      if (response.success) {
+        setCart([]);
+        return true;
+      } else {
+        throw new Error(response.error || 'Failed to clear cart');
+      }
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+      setError(error.message);
+      
+      // Fallback to localStorage
+      setCart([]);
+      safeLocalStorageSet('indri_cart', []);
+    }
   };
 
   const getTotalItems = () => {
@@ -139,6 +266,7 @@ export const useCart = () => {
   return {
     cart,
     isLoading,
+    error,
     addToCart,
     removeFromCart,
     updateQuantity,
@@ -147,7 +275,8 @@ export const useCart = () => {
     getTotalPrice,
     getItemCount: getTotalItems,
     getTotal: getTotalPrice,
-    isClient
+    isClient,
+    refreshCart: loadCart
   };
 };
 
@@ -217,52 +346,111 @@ export const useOrders = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
+  const [error, setError] = useState(null);
+  
+  const auth = useAuth();
 
   useEffect(() => {
     setIsClient(true);
-    const loadOrders = () => {
+    loadOrders();
+  }, [auth.isLoggedIn]);
+
+  const loadOrders = async () => {
+    if (!auth.isLoggedIn) {
+      // If not logged in, try to load from localStorage as fallback
       const ordersData = safeLocalStorageGet('indri_orders', []);
       setOrders(ordersData);
       setIsLoading(false);
-    };
+      return;
+    }
 
-    loadOrders();
-  }, []);
-
-  const addOrder = (order) => {
-    if (!isClient) return;
-
-    const newOrder = {
-      id: Date.now(),
-      ...order,
-      createdAt: new Date().toISOString(),
-      status: 'pending'
-    };
-
-    const newOrders = [newOrder, ...orders];
-    setOrders(newOrders);
-    safeLocalStorageSet('indri_orders', newOrders);
-    return newOrder;
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await makeApiCall('/api/orders');
+      if (response.success) {
+        setOrders(response.data || []);
+      } else {
+        throw new Error(response.error || 'Failed to load orders');
+      }
+    } catch (error) {
+      console.error('Error loading orders:', error);
+      setError(error.message);
+      // Fallback to localStorage
+      const ordersData = safeLocalStorageGet('indri_orders', []);
+      setOrders(ordersData);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const updateOrderStatus = (orderId, status) => {
+  const addOrder = async (orderData) => {
     if (!isClient) return;
 
-    const newOrders = orders.map(order =>
-      order.id === orderId
-        ? { ...order, status, updatedAt: new Date().toISOString() }
-        : order
-    );
+    try {
+      setError(null);
+      const response = await makeApiCall('/api/orders', {
+        method: 'POST',
+        body: JSON.stringify(orderData)
+      });
 
-    setOrders(newOrders);
-    safeLocalStorageSet('indri_orders', newOrders);
+      if (response.success) {
+        // Reload orders to get updated data
+        await loadOrders();
+        return response.data;
+      } else {
+        throw new Error(response.error || 'Failed to create order');
+      }
+    } catch (error) {
+      console.error('Error creating order:', error);
+      setError(error.message);
+      
+      // Fallback to localStorage
+      const newOrder = {
+        id: Date.now(),
+        ...orderData,
+        createdAt: new Date().toISOString(),
+        status: 'pending'
+      };
+
+      const newOrders = [newOrder, ...orders];
+      setOrders(newOrders);
+      safeLocalStorageSet('indri_orders', newOrders);
+      return newOrder;
+    }
+  };
+
+  const updateOrderStatus = async (orderId, status) => {
+    if (!isClient) return;
+
+    try {
+      setError(null);
+      // Note: You'll need to implement the PUT endpoint for orders
+      // For now, this will fall back to localStorage
+      throw new Error('Order status update via API not implemented yet');
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      setError(error.message);
+      
+      // Fallback to localStorage
+      const newOrders = orders.map(order =>
+        order.id === orderId
+          ? { ...order, status, updatedAt: new Date().toISOString() }
+          : order
+      );
+
+      setOrders(newOrders);
+      safeLocalStorageSet('indri_orders', newOrders);
+    }
   };
 
   return {
     orders,
     isLoading,
+    error,
     addOrder,
     updateOrderStatus,
-    isClient
+    isClient,
+    refreshOrders: loadOrders
   };
 };
