@@ -1,9 +1,9 @@
 {
-  "id": 7,
-  "name": "E2E Tester 630919",
-  "email": "e2e_630919@example.com",
-  "phone": "08123456789",
+  "id": 4,
+  "name": "test",
+  "email": "ar2@gmail.com",
+  "phone": "85656666614",
   "address": null,
-  "dateRegistered": "2025-08-28T03:06:55.762Z",
+  "dateRegistered": "2025-08-28T02:38:49.472Z",
   "role": "customer"
 }
