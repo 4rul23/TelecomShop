@@ -1,9 +1,14 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 
 const USERS_FILE = path.join(process.cwd(), 'src/data/users.json');
 const CURRENT_USER_FILE = path.join(process.cwd(), 'src/data/currentUser.json');
+const TMP_CURRENT_USER_FILE = path.join(os.tmpdir(), 'telecom_current_user.json');
+
+// In-memory fallback
+let memoryCurrentUser = null;
 
 // Helper function to read users from file
 function readUsers() {
@@ -22,7 +27,24 @@ function readUsers() {
 // Helper function to write current user to file
 function writeCurrentUser(user) {
   try {
-    fs.writeFileSync(CURRENT_USER_FILE, JSON.stringify(user, null, 2), 'utf8');
+    // Try primary path
+    try {
+      fs.writeFileSync(CURRENT_USER_FILE, JSON.stringify(user, null, 2), 'utf8');
+      return true;
+    } catch (err) {
+      console.warn('Primary currentUser write failed:', err.message);
+    }
+
+    // Try tmp path
+    try {
+      fs.writeFileSync(TMP_CURRENT_USER_FILE, JSON.stringify(user, null, 2), 'utf8');
+      return true;
+    } catch (err) {
+      console.warn('Tmp currentUser write failed:', err.message);
+    }
+
+    // Fallback to in-memory
+    memoryCurrentUser = user;
     return true;
   } catch (error) {
     console.error('Error writing current user file:', error);
@@ -33,11 +55,17 @@ function writeCurrentUser(user) {
 // Helper function to read current user from file
 function readCurrentUser() {
   try {
-    if (!fs.existsSync(CURRENT_USER_FILE)) {
-      return null;
+    if (fs.existsSync(CURRENT_USER_FILE)) {
+      const data = fs.readFileSync(CURRENT_USER_FILE, 'utf8');
+      return JSON.parse(data);
     }
-    const data = fs.readFileSync(CURRENT_USER_FILE, 'utf8');
-    return JSON.parse(data);
+
+    if (fs.existsSync(TMP_CURRENT_USER_FILE)) {
+      const data = fs.readFileSync(TMP_CURRENT_USER_FILE, 'utf8');
+      return JSON.parse(data);
+    }
+
+    return memoryCurrentUser;
   } catch (error) {
     console.error('Error reading current user file:', error);
     return null;

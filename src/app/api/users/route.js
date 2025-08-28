@@ -1,32 +1,74 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 
 const USERS_FILE = path.join(process.cwd(), 'src/data/users.json');
+const TMP_USERS_FILE = path.join(os.tmpdir(), 'telecom_users.json');
+
+// In-memory fallback when filesystem is not writable (serverless environments)
+let memoryUsers = null;
 
 // Helper function to read users from file
 function readUsers() {
   try {
-    if (!fs.existsSync(USERS_FILE)) {
-      fs.writeFileSync(USERS_FILE, '[]', 'utf8');
-      return [];
+    // Try primary file first
+    if (fs.existsSync(USERS_FILE)) {
+      const data = fs.readFileSync(USERS_FILE, 'utf8');
+      return JSON.parse(data);
     }
-    const data = fs.readFileSync(USERS_FILE, 'utf8');
-    return JSON.parse(data);
+
+    // If primary not available, try tmp file (writable on many serverless platforms)
+    if (fs.existsSync(TMP_USERS_FILE)) {
+      const data = fs.readFileSync(TMP_USERS_FILE, 'utf8');
+      return JSON.parse(data);
+    }
+
+    // Fallback to in-memory cache if available
+    if (memoryUsers !== null) {
+      return memoryUsers;
+    }
+
+    // If nothing exists yet, initialize empty array
+    return [];
   } catch (error) {
     console.error('Error reading users file:', error);
-    return [];
+    // If read fails, try to return memory fallback
+    return memoryUsers !== null ? memoryUsers : [];
   }
 }
 
 // Helper function to write users to file
 function writeUsers(users) {
   try {
-    fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
+    // Try writing to project directory (works locally)
+    try {
+      fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
+      return true;
+    } catch (err) {
+      console.warn('Primary write failed, attempting tmp file write:', err.message);
+    }
+
+    // Try writing to tmp directory (may work on serverless)
+    try {
+      fs.writeFileSync(TMP_USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
+      return true;
+    } catch (err) {
+      console.warn('Tmp file write failed, falling back to memory:', err.message);
+    }
+
+    // Fallback: keep users in memory for the life of the function instance
+    memoryUsers = users;
     return true;
   } catch (error) {
     console.error('Error writing users file:', error);
-    return false;
+    // store in memory as last resort
+    try {
+      memoryUsers = users;
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }
 
