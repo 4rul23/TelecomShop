@@ -38,8 +38,16 @@ export function AuthProvider({ children }) {
       if (result.success) {
         setUser(result.user);
         setIsLoggedIn(true);
-  // session persistence is handled by an HttpOnly cookie + server-side session
-  // do not write raw user/auth tokens to localStorage for security
+        // Notify any legacy listeners (or components listening for authChange)
+        if (typeof window !== 'undefined') {
+          try {
+            window.dispatchEvent(new Event('authChange'));
+          } catch (e) {
+            console.warn('authChange dispatch failed', e);
+          }
+        }
+        // session persistence is handled by an HttpOnly cookie + server-side session
+        // do not write raw user/auth tokens to localStorage for security
         return { success: true, user: result.user };
       } else {
         return { success: false, error: result.error };
