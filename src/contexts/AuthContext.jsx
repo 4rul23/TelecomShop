@@ -38,19 +38,8 @@ export function AuthProvider({ children }) {
       if (result.success) {
         setUser(result.user);
         setIsLoggedIn(true);
-
-        // Persist session to localStorage for components that rely on it
-        if (typeof window !== 'undefined') {
-          try {
-            const authToken = `token_${Date.now()}_${Math.random()}`;
-            localStorage.setItem('user', JSON.stringify(result.user));
-            localStorage.setItem('authToken', authToken);
-            window.dispatchEvent(new Event('authChange'));
-          } catch (e) {
-            console.warn('Failed to persist login to localStorage', e);
-          }
-        }
-
+  // session persistence is handled by an HttpOnly cookie + server-side session
+  // do not write raw user/auth tokens to localStorage for security
         return { success: true, user: result.user };
       } else {
         return { success: false, error: result.error };
@@ -82,8 +71,8 @@ export function AuthProvider({ children }) {
       setIsLoggedIn(false);
       if (typeof window !== 'undefined') {
         try {
-          localStorage.removeItem('user');
-          localStorage.removeItem('authToken');
+          // Do not remove server session user here; cookie/session is cleared server-side.
+          // Keep client-side storage for cart/favorites only.
           localStorage.removeItem('indri_cart');
           localStorage.removeItem('indri_favorites');
           window.dispatchEvent(new Event('authChange'));
