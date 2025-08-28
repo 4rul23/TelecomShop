@@ -1,22 +1,42 @@
 [
-    {
-        "id": 1,
-        "name": "Test User",
-        "email": "test@example.com",
-        "password": "123456",
-        "phone": "081234567890",
-        "address": "",
-        "dateRegistered": "2025-08-06T04:39:41.678Z",
-        "role": "customer"
-    },
-    {
-        "id": 2,
-        "name": "John Doe",
-        "email": "john@example.com",
-        "password": "password123",
-        "phone": "08123456789",
-        "address": "",
-        "dateRegistered": "2025-08-06T04:42:17.068Z",
-        "role": "customer"
-    }
+  {
+    "id": 1,
+    "name": "Test User",
+    "email": "test@example.com",
+    "password": "123456",
+    "phone": "081234567890",
+    "address": "",
+    "dateRegistered": "2025-08-06T04:39:41.678Z",
+    "role": "customer"
+  },
+  {
+    "id": 2,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "password123",
+    "phone": "08123456789",
+    "address": "",
+    "dateRegistered": "2025-08-06T04:42:17.068Z",
+    "role": "customer"
+  },
+  {
+    "id": 3,
+    "name": "arul gu",
+    "email": "test@gmail.com",
+    "password": "pimjaya",
+    "phone": "12312312",
+    "address": "",
+    "dateRegistered": "2025-08-28T01:54:20.362Z",
+    "role": "customer"
+  },
+  {
+    "id": 4,
+    "name": "test",
+    "email": "ar2@gmail.com",
+    "password": "pimjaya",
+    "phone": "85656666614",
+    "address": "",
+    "dateRegistered": "2025-08-28T01:56:30.819Z",
+    "role": "customer"
+  }
 ]

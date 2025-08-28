@@ -38,6 +38,19 @@ export function AuthProvider({ children }) {
       if (result.success) {
         setUser(result.user);
         setIsLoggedIn(true);
+
+        // Persist session to localStorage for components that rely on it
+        if (typeof window !== 'undefined') {
+          try {
+            const authToken = `token_${Date.now()}_${Math.random()}`;
+            localStorage.setItem('user', JSON.stringify(result.user));
+            localStorage.setItem('authToken', authToken);
+            window.dispatchEvent(new Event('authChange'));
+          } catch (e) {
+            console.warn('Failed to persist login to localStorage', e);
+          }
+        }
+
         return { success: true, user: result.user };
       } else {
         return { success: false, error: result.error };
@@ -67,6 +80,17 @@ export function AuthProvider({ children }) {
       await fileDB.logoutUser();
       setUser(null);
       setIsLoggedIn(false);
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.removeItem('user');
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('indri_cart');
+          localStorage.removeItem('indri_favorites');
+          window.dispatchEvent(new Event('authChange'));
+        } catch (e) {
+          console.warn('Failed to clear localStorage on logout', e);
+        }
+      }
     } catch (error) {
       console.error('Error logging out:', error);
       // Still clear local state even if API call fails
