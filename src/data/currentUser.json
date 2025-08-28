@@ -1,9 +1,7 @@
 {
-    "id": 1,
-    "name": "Test User",
-    "email": "test@example.com",
-    "phone": "081234567890",
-    "address": "",
-    "dateRegistered": "2025-08-06T04:39:41.678Z",
-    "role": "customer"
+  "id": "user_1756344620751_4kgbl5",
+  "name": "Test",
+  "email": "test@gmail.com",
+  "phone": "pim@admin.com",
+  "createdAt": "2025-08-28T01:30:20.751Z"
 }

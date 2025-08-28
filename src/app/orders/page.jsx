@@ -38,37 +38,37 @@ function OrdersPage() {
       } else {
         // Generate some demo orders for the user if no orders exist
         const demoOrders = [
-        {
-          id: 'ORD-001',
-          date: '2024-01-15',
-          status: 'Delivered',
-          total: 2750000,
-          items: [
-            { name: 'RJ45 Connector Cat6', quantity: 100, price: 2500 },
-            { name: 'Switch 24 Port Gigabit', quantity: 2, price: 1250000 }
-          ],
-          shippingAddress: parsedUser.address || 'Alamat belum diisi'
-        },
-        {
-          id: 'ORD-002',
-          date: '2024-01-20',
-          status: 'Processing',
-          total: 1850000,
-          items: [
-            { name: 'Access Point WiFi 6', quantity: 1, price: 1850000 }
-          ],
-          shippingAddress: parsedUser.address || 'Alamat belum diisi'
-        },
-        {
-          id: 'ORD-003',
-          date: '2024-01-25',
-          status: 'Shipped',
-          total: 450000,
-          items: [
-            { name: 'Fiber Optic Cable SC-SC 50m', quantity: 1, price: 450000 }
-          ],
-          shippingAddress: parsedUser.address || 'Alamat belum diisi'
-        }
+          {
+            id: 'ORD-001',
+            date: '2024-01-15',
+            status: 'Delivered',
+            total: 2750000,
+            items: [
+              { name: 'RJ45 Connector Cat6', quantity: 100, price: 2500 },
+              { name: 'Switch 24 Port Gigabit', quantity: 2, price: 1250000 }
+            ],
+            shippingAddress: parsedUser.address || 'Alamat belum diisi'
+          },
+          {
+            id: 'ORD-002',
+            date: '2024-01-20',
+            status: 'Processing',
+            total: 1850000,
+            items: [
+              { name: 'Access Point WiFi 6', quantity: 1, price: 1850000 }
+            ],
+            shippingAddress: parsedUser.address || 'Alamat belum diisi'
+          },
+          {
+            id: 'ORD-003',
+            date: '2024-01-25',
+            status: 'Shipped',
+            total: 450000,
+            items: [
+              { name: 'Fiber Optic Cable SC-SC 50m', quantity: 1, price: 450000 }
+            ],
+            shippingAddress: parsedUser.address || 'Alamat belum diisi'
+          }
         ];
 
         setOrders(demoOrders);
